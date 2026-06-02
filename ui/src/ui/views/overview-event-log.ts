@@ -7,6 +7,8 @@ import { formatEventPayload } from "../presenter.ts";
 
 export type OverviewEventLogProps = {
   events: EventLogEntry[];
+  open: boolean;
+  onToggle: (open: boolean) => void;
 };
 
 export function renderOverviewEventLog(props: OverviewEventLogProps) {
@@ -17,7 +19,17 @@ export function renderOverviewEventLog(props: OverviewEventLogProps) {
   const visible = props.events.slice(0, 20);
 
   return html`
-    <details class="card ov-event-log" open>
+    <details
+      class="card ov-event-log ov-section"
+      ?open=${props.open}
+      @toggle=${(e: Event) => {
+        const target = e.target as HTMLDetailsElement;
+        if (target !== e.currentTarget) {
+          return;
+        }
+        props.onToggle(target.open);
+      }}
+    >
       <summary class="ov-expandable-toggle">
         <span class="nav-item__icon">${icons.radio}</span>
         ${t("overview.eventLog.title")}

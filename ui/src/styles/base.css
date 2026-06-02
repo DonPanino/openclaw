@@ -480,6 +480,167 @@
   --grid-line: rgba(80, 50, 20, 0.04);
 }
 
+/* Nexus — flat tile surfaces, lavender accent, SF Pro rhythm */
+:root[data-theme="nexus"] {
+  --bg: #272729;
+  --bg-accent: #252527;
+  --bg-elevated: #2a2a2c;
+  --bg-hover: #333335;
+  --bg-muted: #333335;
+  --bg-content: #272729;
+
+  --card: #2a2a2c;
+  --card-foreground: #ffffff;
+  --card-highlight: rgba(255, 255, 255, 0.03);
+  --popover: #2a2a2c;
+  --popover-foreground: #ffffff;
+
+  --panel: #000000;
+  --panel-strong: #272729;
+  --panel-hover: #333335;
+  --chrome: rgba(0, 0, 0, 0.92);
+  --chrome-strong: rgba(0, 0, 0, 0.96);
+
+  --text: #f5f5f7;
+  --text-strong: #ffffff;
+  --chat-text: #f5f5f7;
+  --muted: #cccccc;
+  --muted-strong: #a1a1a6;
+  --muted-foreground: #cccccc;
+
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --border-hover: rgba(255, 255, 255, 0.2);
+  --input: rgba(255, 255, 255, 0.12);
+  --ring: #b197fc;
+
+  --accent: #cdb8ff;
+  --accent-hover: #b197fc;
+  --accent-muted: #b197fc;
+  --accent-subtle: rgba(177, 151, 252, 0.14);
+  --accent-foreground: #1d1d1f;
+  --accent-glow: rgba(177, 151, 252, 0.22);
+  --selection-bg: #b197fc;
+  --selection-fg: #1d1d1f;
+  --primary: #b197fc;
+  --primary-foreground: #1d1d1f;
+
+  --secondary: #2a2a2c;
+  --secondary-foreground: #ffffff;
+  --accent-2: #b197fc;
+  --accent-2-muted: rgba(177, 151, 252, 0.75);
+  --accent-2-subtle: rgba(177, 151, 252, 0.1);
+
+  --focus: rgba(177, 151, 252, 0.24);
+  --focus-ring: 0 0 0 2px var(--bg), 0 0 0 3px var(--ring);
+  --focus-glow: 0 0 0 2px var(--bg), 0 0 0 3px var(--ring);
+
+  --grid-line: rgba(255, 255, 255, 0.04);
+
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+  --shadow-xl: none;
+  --shadow-glow: none;
+
+  --font-body:
+    "SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-display:
+    "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+
+  --radius-xs: 5px;
+  --radius-sm: 8px;
+  --radius-md: 11px;
+  --radius-lg: 18px;
+  --radius-xl: 18px;
+  --radius: 11px;
+
+  --control-ui-text-xs: calc(12px * var(--control-ui-text-scale));
+  --control-ui-text-sm: calc(14px * var(--control-ui-text-scale));
+  --control-ui-text-md: calc(17px * var(--control-ui-text-scale));
+  --control-ui-text-lg: calc(21px * var(--control-ui-text-scale));
+  --control-ui-input-text-size: max(17px, calc(17px * var(--control-ui-text-scale)));
+}
+
+:root[data-theme="nexus-light"] {
+  --bg: #f5f5f7;
+  --bg-accent: #fafafc;
+  --bg-elevated: #ffffff;
+  --bg-hover: #ececef;
+  --bg-muted: #ececef;
+  --bg-content: #f5f5f7;
+
+  --card: #ffffff;
+  --card-foreground: #1d1d1f;
+  --card-highlight: rgba(0, 0, 0, 0.02);
+  --popover: #ffffff;
+  --popover-foreground: #1d1d1f;
+
+  --panel: #fafafc;
+  --panel-strong: #ffffff;
+  --panel-hover: #ececef;
+  --chrome: rgba(250, 250, 252, 0.88);
+  --chrome-strong: rgba(255, 255, 255, 0.96);
+
+  --text: #1d1d1f;
+  --text-strong: #1d1d1f;
+  --chat-text: #1d1d1f;
+  --muted: #7a7a7a;
+  --muted-strong: #333333;
+  --muted-foreground: #7a7a7a;
+
+  --border: #e0e0e0;
+  --border-strong: #d2d2d7;
+  --border-hover: #c7c7cc;
+  --input: #e0e0e0;
+  --ring: #b197fc;
+
+  --accent: #b197fc;
+  --accent-hover: #9b7ef0;
+  --accent-muted: #b197fc;
+  --accent-subtle: rgba(177, 151, 252, 0.1);
+  --accent-foreground: #1d1d1f;
+  --accent-glow: rgba(177, 151, 252, 0.14);
+  --primary: #b197fc;
+  --primary-foreground: #1d1d1f;
+
+  --secondary: #fafafc;
+  --secondary-foreground: #1d1d1f;
+  --accent-2: #b197fc;
+  --accent-2-muted: rgba(177, 151, 252, 0.75);
+  --accent-2-subtle: rgba(177, 151, 252, 0.08);
+
+  --focus: rgba(177, 151, 252, 0.18);
+  --focus-ring: 0 0 0 2px var(--bg), 0 0 0 3px var(--ring);
+  --focus-glow: 0 0 0 2px var(--bg), 0 0 0 3px var(--ring);
+
+  --grid-line: rgba(0, 0, 0, 0.04);
+
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+  --shadow-xl: none;
+  --shadow-glow: none;
+
+  --font-body:
+    "SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-display:
+    "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+
+  --radius-xs: 5px;
+  --radius-sm: 8px;
+  --radius-md: 11px;
+  --radius-lg: 18px;
+  --radius-xl: 18px;
+  --radius: 11px;
+
+  --control-ui-text-xs: calc(12px * var(--control-ui-text-scale));
+  --control-ui-text-sm: calc(14px * var(--control-ui-text-scale));
+  --control-ui-text-md: calc(17px * var(--control-ui-text-scale));
+  --control-ui-text-lg: calc(21px * var(--control-ui-text-scale));
+  --control-ui-input-text-size: max(17px, calc(17px * var(--control-ui-text-scale)));
+}
+
 * {
   box-sizing: border-box;
 }

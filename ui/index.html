@@ -11,7 +11,7 @@
     <link rel="manifest" href="/manifest.webmanifest" />
     <script>
       (function () {
-        var THEMES = { claw: 1, knot: 1, dash: 1 };
+        var THEMES = { claw: 1, nexus: 1, knot: 1, dash: 1 };
         var MODES = { system: 1, light: 1, dark: 1 };
         var LEGACY = {
           dark: "claw:dark",
@@ -43,17 +43,21 @@
             mode = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
           }
           var resolved =
-            theme === "knot"
+            theme === "nexus"
               ? mode === "light"
-                ? "openknot-light"
-                : "openknot"
-              : theme === "dash"
+                ? "nexus-light"
+                : "nexus"
+              : theme === "knot"
                 ? mode === "light"
-                  ? "dash-light"
-                  : "dash"
-                : mode === "light"
-                  ? "light"
-                  : "dark";
+                  ? "openknot-light"
+                  : "openknot"
+                : theme === "dash"
+                  ? mode === "light"
+                    ? "dash-light"
+                    : "dash"
+                  : mode === "light"
+                    ? "light"
+                    : "dark";
           document.documentElement.setAttribute("data-theme", resolved);
           document.documentElement.setAttribute(
             "data-theme-mode",

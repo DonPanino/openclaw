@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=OpenClaw
+Comment=OpenClaw Linux companion
+Exec=openclaw-app
+Icon=openclaw
+Terminal=false
+Type=Application
+Categories=Network;Chat;
+MimeType=x-scheme-handler/openclaw;
+StartupNotify=true

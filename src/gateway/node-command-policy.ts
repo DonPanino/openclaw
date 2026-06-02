@@ -114,7 +114,13 @@ const PLATFORM_DEFAULTS: Record<string, string[]> = {
     ...SYSTEM_COMMANDS,
     ...SCREEN_COMMANDS,
   ],
-  linux: [...SYSTEM_COMMANDS],
+  linux: [
+    ...CAMERA_COMMANDS,
+    ...LOCATION_COMMANDS,
+    ...DEVICE_COMMANDS,
+    ...SYSTEM_COMMANDS,
+    ...SCREEN_COMMANDS,
+  ],
   windows: [
     ...CAMERA_COMMANDS,
     ...LOCATION_COMMANDS,

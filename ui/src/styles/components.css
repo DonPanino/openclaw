@@ -6137,35 +6137,176 @@ td.data-table-key-col {
 }
 
 /* ===========================================
+   Overview Dashboard
+   =========================================== */
+
+.ov-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ov-section {
+  padding: 0;
+  overflow: hidden;
+}
+
+.ov-section__summary {
+  padding: 10px 14px;
+}
+
+.ov-section__titles {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  text-align: left;
+}
+
+.ov-section__title {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.016em;
+  color: var(--text-strong);
+}
+
+.ov-section__sub {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.ov-section__body {
+  padding: 0 14px 14px;
+}
+
+.ov-section__body--compact {
+  padding-top: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.ov-dashboard .ov-access-grid {
+  margin-top: 0;
+  gap: 10px;
+}
+
+.ov-field-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.ov-field-row input {
+  flex: 1 1 0;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.ov-actions {
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.ov-callout {
+  margin-top: 0;
+}
+
+.ov-snapshot-grid {
+  gap: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(112px, 1fr));
+}
+
+.ov-dashboard .stat {
+  padding: 8px 10px;
+}
+
+.ov-dashboard .stat-label {
+  font-size: 11px;
+}
+
+.ov-dashboard .stat-value {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.ov-subsection {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.ov-subsection__summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.ov-subsection__summary::-webkit-details-marker {
+  display: none;
+}
+
+.ov-subsection__summary::after {
+  content: "";
+  width: 14px;
+  height: 14px;
+  margin-left: auto;
+  opacity: 0.35;
+  background: currentColor;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m9 18 6-6-6-6'/%3E%3C/svg%3E");
+  mask-size: contain;
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.ov-subsection[open] > .ov-subsection__summary::after {
+  transform: rotate(90deg);
+}
+
+.ov-subsection__body {
+  padding: 0 12px 12px;
+}
+
+.ov-subsection__body .login-gate__steps {
+  margin: 0;
+  padding-left: 18px;
+}
+
+/* ===========================================
    Overview Cards
    =========================================== */
 
 .ov-cards {
   display: grid;
-  gap: 12px;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
 }
 
 .ov-card {
   display: grid;
-  gap: 6px;
-  padding: 16px;
+  gap: 4px;
+  padding: 10px 12px;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   background: var(--card);
   cursor: pointer;
   text-align: left;
-  transition:
-    border-color var(--duration-normal) var(--ease-out),
-    box-shadow var(--duration-normal) var(--ease-out),
-    transform var(--duration-fast) var(--ease-out);
+  transition: border-color var(--duration-normal) var(--ease-out);
   animation: rise 0.25s var(--ease-out) backwards;
 }
 
 .ov-card:hover {
   border-color: var(--border-strong);
-  box-shadow: var(--shadow-sm);
-  transform: translateY(-1px);
+  box-shadow: none;
+  transform: none;
 }
 
 .ov-card:focus-visible {
@@ -6174,18 +6315,18 @@ td.data-table-key-col {
 }
 
 .ov-card__label {
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 10px;
+  font-weight: 500;
   color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
 
 .ov-card__value {
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1.15;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.022em;
+  line-height: 1.2;
   color: var(--text-strong);
 }
 
@@ -6198,9 +6339,13 @@ td.data-table-key-col {
 }
 
 .ov-card__hint {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--muted);
   line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .ov-card__hint .danger {
@@ -6239,7 +6384,7 @@ td.data-table-key-col {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  padding: 10px 12px;
+  padding: 8px 10px;
   border-radius: var(--radius-md);
   background: var(--bg-hover);
   border: 1px solid var(--border);
@@ -6306,7 +6451,7 @@ td.data-table-key-col {
 
 /* Recent sessions widget */
 .ov-recent {
-  margin-top: 18px;
+  margin-top: 0;
 }
 
 .ov-recent__title {
@@ -6323,18 +6468,18 @@ td.data-table-key-col {
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 6px;
+  gap: 4px;
 }
 
 .ov-recent__row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto auto;
-  gap: 12px;
-  padding: 8px 12px;
+  gap: 10px;
+  padding: 6px 10px;
   border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  background: var(--card);
-  font-size: 13px;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  font-size: 12px;
   align-items: center;
   transition: border-color var(--duration-fast) ease;
 }
@@ -6399,8 +6544,8 @@ td.data-table-key-col {
 /* Bottom grid (event log + log tail) */
 .ov-bottom-grid {
   display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
 
 /* Expandable log panels */
@@ -6414,7 +6559,7 @@ td.data-table-key-col {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 16px;
+  padding: 10px 14px;
   cursor: pointer;
   font-size: 13px;
   font-weight: 600;
@@ -6446,14 +6591,19 @@ td.data-table-key-col {
   content: "";
   width: 16px;
   height: 16px;
-  margin-left: auto;
   flex-shrink: 0;
+  margin-left: 4px;
   background: currentColor;
   opacity: 0.35;
   mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m9 18 6-6-6-6'/%3E%3C/svg%3E");
   mask-size: contain;
   mask-repeat: no-repeat;
   transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.ov-count-badge {
+  flex-shrink: 0;
+  margin-left: auto;
 }
 
 details[open] > .ov-expandable-toggle::after {

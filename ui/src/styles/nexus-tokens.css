@@ -1,0 +1,397 @@
+/*
+ * Nexus design tokens + theme-wide surface bindings.
+ * Scoped to data-theme="nexus" | "nexus-light".
+ */
+
+:root[data-theme="nexus"],
+:root[data-theme="nexus-light"] {
+  /* Brand lavender */
+  --nexus-primary: #b197fc;
+  --nexus-primary-hover: #9b7ef0;
+  --nexus-primary-focus: #cdb8ff;
+  --nexus-primary-on-dark: #cdb8ff;
+  --nexus-black: #000000;
+
+  /* Spacing — 8px base, 17px body rhythm */
+  --nexus-space-xxs: 4px;
+  --nexus-space-xs: 8px;
+  --nexus-space-sm: 12px;
+  --nexus-space-md: 17px;
+  --nexus-space-lg: 24px;
+  --nexus-space-xl: 32px;
+  --nexus-space-xxl: 48px;
+  --nexus-space-section: 80px;
+
+  --radius-xs: 5px;
+
+  /* Typography scale */
+  --nexus-type-hero-size: 56px;
+  --nexus-type-hero-weight: 600;
+  --nexus-type-hero-leading: 1.07;
+  --nexus-type-hero-tracking: -0.28px;
+
+  --nexus-type-display-lg-size: 40px;
+  --nexus-type-display-lg-weight: 600;
+  --nexus-type-display-lg-leading: 1.1;
+  --nexus-type-display-lg-tracking: 0;
+
+  --nexus-type-display-md-size: 34px;
+  --nexus-type-display-md-weight: 600;
+  --nexus-type-display-md-leading: 1.47;
+  --nexus-type-display-md-tracking: -0.374px;
+
+  --nexus-type-lead-size: 28px;
+  --nexus-type-lead-weight: 400;
+  --nexus-type-lead-leading: 1.14;
+  --nexus-type-lead-tracking: 0.196px;
+
+  --nexus-type-tagline-size: 21px;
+  --nexus-type-tagline-weight: 600;
+  --nexus-type-tagline-leading: 1.19;
+  --nexus-type-tagline-tracking: 0.231px;
+
+  --nexus-type-body-size: 17px;
+  --nexus-type-body-weight: 400;
+  --nexus-type-body-leading: 1.47;
+  --nexus-type-body-tracking: -0.374px;
+
+  --nexus-type-body-strong-weight: 600;
+  --nexus-type-body-strong-leading: 1.24;
+
+  --nexus-type-caption-size: 14px;
+  --nexus-type-caption-weight: 400;
+  --nexus-type-caption-leading: 1.43;
+  --nexus-type-caption-tracking: -0.224px;
+
+  --nexus-type-fine-size: 12px;
+  --nexus-type-fine-tracking: -0.12px;
+
+  --nexus-type-micro-size: 10px;
+  --nexus-type-micro-tracking: -0.08px;
+
+  --nexus-type-nav-size: 12px;
+  --nexus-type-nav-tracking: -0.12px;
+
+  /* Component heights */
+  --nexus-global-nav-height: 44px;
+  --nexus-sub-nav-height: 52px;
+  --nexus-sticky-bar-height: 64px;
+  --nexus-touch-target: 44px;
+
+  /* Frosted chrome */
+  --nexus-frosted-bg: color-mix(in srgb, var(--nexus-parchment) 82%, transparent);
+  --nexus-frosted-blur: saturate(180%) blur(20px);
+
+  /* Elevation — product imagery only */
+  --nexus-product-shadow: rgba(0, 0, 0, 0.22) 3px 5px 30px 0;
+}
+
+:root[data-theme="nexus"] {
+  --nexus-frosted-bg: color-mix(in srgb, var(--bg) 82%, transparent);
+}
+
+/* Theme-wide surface bindings */
+
+:root[data-theme="nexus"],
+:root[data-theme="nexus-light"] {
+  --nexus-canvas: var(--card);
+  --nexus-parchment: var(--bg);
+  --nexus-pearl: var(--secondary);
+  --nexus-hairline: var(--border);
+  --nexus-ink: var(--text-strong);
+  --nexus-ink-muted-80: var(--muted-strong);
+  --nexus-ink-muted-48: var(--muted);
+  --nexus-tile-1: var(--bg);
+  --nexus-tile-2: var(--card);
+  --nexus-tile-3: var(--bg-accent);
+  --nexus-divider-soft: color-mix(in srgb, var(--border) 65%, transparent);
+  --nexus-body-muted: var(--muted);
+  --nexus-frosted-blur: saturate(180%) blur(20px);
+  --nexus-frosted-bg: color-mix(in srgb, var(--bg) 88%, transparent);
+}
+
+:root[data-theme="nexus"] {
+  --nexus-chip-fill: rgba(210, 210, 215, 0.16);
+  --nexus-chip-dark: rgba(210, 210, 215, 0.16);
+  --nexus-chip: rgba(210, 210, 215, 0.16);
+  --nexus-nav-fg: rgba(255, 255, 255, 0.72);
+  --nexus-nav-fg-strong: #ffffff;
+  --nexus-subnav-border: rgba(255, 255, 255, 0.08);
+  --nexus-link-on-surface: var(--nexus-primary-on-dark);
+}
+
+:root[data-theme="nexus-light"] {
+  --nexus-chip-fill: rgba(210, 210, 215, 0.64);
+  --nexus-chip-dark: rgba(210, 210, 215, 0.64);
+  --nexus-chip: rgba(210, 210, 215, 0.64);
+  --nexus-nav-fg: var(--muted);
+  --nexus-nav-fg-strong: var(--text-strong);
+  --nexus-subnav-border: var(--border);
+  --nexus-link-on-surface: var(--primary);
+  --nexus-frosted-bg: color-mix(in srgb, var(--bg-elevated) 92%, transparent);
+}
+
+/* Semantic ink tokens track text roles in content */
+:root[data-theme="nexus"] {
+  --nexus-ink: var(--text-strong);
+  --nexus-body-muted: var(--muted);
+  --nexus-ink-muted-80: var(--muted-strong);
+  --nexus-ink-muted-48: var(--muted);
+}
+
+:root[data-theme="nexus-light"] {
+  --nexus-ink: var(--text-strong);
+  --nexus-body-muted: var(--muted);
+  --nexus-ink-muted-80: var(--muted-strong);
+  --nexus-ink-muted-48: var(--muted);
+}
+
+/* Shell + content canvas track theme mode */
+:root[data-theme="nexus"] openclaw-app,
+:root[data-theme="nexus-light"] openclaw-app {
+  background: var(--bg);
+  color: var(--text);
+}
+
+:root[data-theme="nexus"] .content,
+:root[data-theme="nexus-light"] .content {
+  background: var(--bg-content, var(--bg));
+  color: var(--text);
+}
+
+:root[data-theme="nexus"] .content--chat,
+:root[data-theme="nexus-light"] .content--chat {
+  background: var(--bg);
+}
+
+/* Cards, lists, stats — one rule, token-driven */
+:root[data-theme="nexus"] :is(.card, .stat, .stat-card, .list-item, .ov-section, .ov-card),
+:root[data-theme="nexus-light"] :is(.card, .stat, .stat-card, .list-item, .ov-section, .ov-card) {
+  background: var(--card);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+:root[data-theme="nexus"] .callout,
+:root[data-theme="nexus-light"] .callout {
+  background: var(--card);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+:root[data-theme="nexus"] .field :is(input, textarea, select),
+:root[data-theme="nexus-light"] .field :is(input, textarea, select),
+:root[data-theme="nexus"] .input,
+:root[data-theme="nexus-light"] .input {
+  background: var(--bg-elevated);
+  border-color: var(--input);
+  color: var(--text);
+}
+
+:root[data-theme="nexus"] .topbar-search,
+:root[data-theme="nexus-light"] .topbar-search {
+  background: var(--bg-elevated);
+  border-color: var(--input);
+  color: var(--text);
+}
+
+/* Chat surfaces */
+:root[data-theme="nexus"] :is(.chat-sidebar, .sidebar-panel, .chat-workspace-rail),
+:root[data-theme="nexus-light"] :is(.chat-sidebar, .sidebar-panel, .chat-workspace-rail) {
+  background: var(--bg-accent);
+  border-color: var(--border);
+}
+
+:root[data-theme="nexus"] :is(.agent-chat__input, .chat-bubble, .chat-tool-card, .sidebar-markdown-reader),
+:root[data-theme="nexus-light"] :is(.agent-chat__input, .chat-bubble, .chat-tool-card, .sidebar-markdown-reader) {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+/* Popovers/menus follow popover token */
+:root[data-theme="nexus"] :is(
+    .chat-session-picker,
+    .chat-controls__inline-select-menu,
+    .chat-settings-popover,
+    .slash-menu,
+    .agent-chat__talk-select-menu
+  ),
+:root[data-theme="nexus-light"] :is(
+    .chat-session-picker,
+    .chat-controls__inline-select-menu,
+    .chat-settings-popover,
+    .slash-menu,
+    .agent-chat__talk-select-menu
+  ) {
+  background: var(--popover);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+/* ── Final surface sweep — wins over hardcoded light hex in earlier Nexus modules ── */
+:root[data-theme="nexus"] openclaw-app :is(
+    .account-card,
+    .mcp-server-row,
+    .settings-appearance__section,
+    .config-layout,
+    .config-nav,
+    .config-section-card,
+    .config-search__input,
+    .qs-card,
+    .cmd-palette,
+    .cmd-palette__input,
+    .cmd-palette__item,
+    .theme-orb__menu,
+    .usage-page .card,
+    .usage-overview-card,
+    .usage-insight-card,
+    .activity-page .card,
+    .workboard-card,
+    .dreams-page .card,
+    .cron-page .card,
+    .agents-page .card,
+    .md-preview-dialog__panel,
+    .cron-form-modal,
+    .login-gate,
+    .login-gate__card,
+    .modal-dialog,
+    .modal-dialog__panel,
+    .sw-panel,
+    .sw-card,
+    .sw-editor,
+    .pill,
+    .chip,
+    .agent-chip-input,
+    .table-head,
+    .table-row,
+    .sessions-filter-panel,
+    .session-compaction-trigger,
+    .sidebar-markdown-reader,
+    .chat-tool-card,
+    .chat-bubble--assistant,
+    .agent-chat__input-wrap,
+    .agent-chat__input,
+    .chat-composer,
+    .chat-composer__surface,
+    .chat-queue-panel,
+    .chat-side-result,
+    .chat-settings-popover,
+    .chat-session-picker,
+    .chat-controls__inline-select-menu,
+    .slash-menu,
+    .agent-chat__talk-select-menu,
+    .sidebar-session-select .chat-session-picker
+  ),
+:root[data-theme="nexus-light"] openclaw-app :is(
+    .account-card,
+    .mcp-server-row,
+    .settings-appearance__section,
+    .config-layout,
+    .config-nav,
+    .config-section-card,
+    .config-search__input,
+    .qs-card,
+    .cmd-palette,
+    .cmd-palette__input,
+    .cmd-palette__item,
+    .theme-orb__menu,
+    .usage-page .card,
+    .usage-overview-card,
+    .usage-insight-card,
+    .activity-page .card,
+    .workboard-card,
+    .dreams-page .card,
+    .cron-page .card,
+    .agents-page .card,
+    .md-preview-dialog__panel,
+    .cron-form-modal,
+    .login-gate,
+    .login-gate__card,
+    .modal-dialog,
+    .modal-dialog__panel,
+    .sw-panel,
+    .sw-card,
+    .sw-editor,
+    .pill,
+    .chip,
+    .agent-chip-input,
+    .table-head,
+    .table-row,
+    .sessions-filter-panel,
+    .session-compaction-trigger,
+    .sidebar-markdown-reader,
+    .chat-tool-card,
+    .chat-bubble--assistant,
+    .agent-chat__input-wrap,
+    .agent-chat__input,
+    .chat-composer,
+    .chat-composer__surface,
+    .chat-queue-panel,
+    .chat-side-result,
+    .chat-settings-popover,
+    .chat-session-picker,
+    .chat-controls__inline-select-menu,
+    .slash-menu,
+    .agent-chat__talk-select-menu,
+    .sidebar-session-select .chat-session-picker
+  ) {
+  background: var(--card);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+:root[data-theme="nexus"] openclaw-app :is(.config-nav, .chat-sidebar, .sidebar-panel, .chat-workspace-rail),
+:root[data-theme="nexus-light"] openclaw-app :is(.config-nav, .chat-sidebar, .sidebar-panel, .chat-workspace-rail) {
+  background: var(--bg-accent);
+  border-color: var(--border);
+}
+
+:root[data-theme="nexus"] openclaw-app :is(.config-layout, .config-search__input, .workboard .input),
+:root[data-theme="nexus-light"] openclaw-app :is(.config-layout, .config-search__input, .workboard .input) {
+  background: var(--bg);
+}
+
+:root[data-theme="nexus"] openclaw-app :is(.table-row:hover, .cmd-palette__item:hover, .cmd-palette__item--active),
+:root[data-theme="nexus-light"] openclaw-app :is(.table-row:hover, .cmd-palette__item:hover, .cmd-palette__item--active) {
+  background: var(--bg-hover);
+}
+
+:root[data-theme="nexus"] openclaw-app :is(.qs-segmented__btn--active, .config-mode-toggle__btn--active, .dreams__tab--active),
+:root[data-theme="nexus-light"] openclaw-app :is(.qs-segmented__btn--active, .config-mode-toggle__btn--active, .dreams__tab--active) {
+  background: color-mix(in srgb, var(--primary) 8%, var(--card) 92%);
+  border-color: var(--nexus-primary-focus);
+  color: var(--text-strong);
+}
+
+:root[data-theme="nexus"] openclaw-app .topbar-theme-mode,
+:root[data-theme="nexus-light"] openclaw-app .topbar-theme-mode {
+  background: var(--nexus-chip-fill);
+  border-color: var(--border);
+}
+
+:root[data-theme="nexus"] openclaw-app .topbar-theme-mode__btn,
+:root[data-theme="nexus-light"] openclaw-app .topbar-theme-mode__btn {
+  color: var(--muted);
+}
+
+:root[data-theme="nexus"] openclaw-app .topbar-theme-mode__btn--active,
+:root[data-theme="nexus-light"] openclaw-app .topbar-theme-mode__btn--active {
+  background: var(--card);
+  color: var(--text-strong);
+  border-color: var(--border);
+}
+
+:root[data-theme="nexus"] openclaw-app .content-header,
+:root[data-theme="nexus-light"] openclaw-app .content-header {
+  color: var(--text);
+}
+
+:root[data-theme="nexus"] openclaw-app .page-title,
+:root[data-theme="nexus-light"] openclaw-app .page-title {
+  color: var(--text-strong);
+}
+
+:root[data-theme="nexus"] openclaw-app .page-sub,
+:root[data-theme="nexus-light"] openclaw-app .page-sub {
+  color: var(--muted);
+}

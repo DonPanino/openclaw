@@ -1,0 +1,18 @@
+# Flatpak manifest stub — complete finish-args and npm SDK extension before publishing.
+app-id: ai.openclaw.linux
+runtime: org.gnome.Platform
+runtime-version: "48"
+sdk: org.gnome.Sdk
+command: openclaw-linux-app
+finish-args:
+  - --share=network
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --device=dri
+  - --talk-name=org.freedesktop.Notifications
+  - --filesystem=home
+modules:
+  - name: openclaw-app
+    buildsystem: simple
+    build-commands:
+      - echo "Build from repo root with pnpm linux:build and install binary into /app/bin"

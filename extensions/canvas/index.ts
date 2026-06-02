@@ -121,7 +121,7 @@ export default definePluginEntry({
     }
     api.registerNodeInvokePolicy({
       commands: CANVAS_NODE_COMMANDS,
-      defaultPlatforms: ["ios", "android", "macos", "windows", "unknown"],
+      defaultPlatforms: ["ios", "android", "macos", "windows", "linux", "unknown"],
       foregroundRestrictedOnIos: true,
       handle: (ctx) => ctx.invokeNode(),
     });

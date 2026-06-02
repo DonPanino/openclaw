@@ -1,0 +1,32 @@
+[package]
+name = "openclaw-linux-app-tauri"
+version = "2026.6.2"
+edition = "2021"
+
+[lib]
+name = "openclaw_linux_app_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+openclaw-protocol = { path = "../../crates/openclaw-protocol" }
+openclaw-kit = { path = "../../crates/openclaw-kit" }
+openclaw-node-host = { path = "../../crates/node-host" }
+openclaw-capture = { path = "../../crates/capture" }
+openclaw-voice = { path = "../../crates/voice" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "sync", "time", "process", "fs"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+tauri = { version = "2", features = ["tray-icon"] }
+tauri-plugin-shell = "2"
+tauri-plugin-deep-link = "2"
+notify-rust = "4"
+url = "2"
+
+[[bin]]
+name = "openclaw-linux-app"
+path = "src/main.rs"

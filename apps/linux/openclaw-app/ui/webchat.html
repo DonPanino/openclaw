@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>OpenClaw WebChat</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>WebChat</h1>
+      <p class="subtitle">Full chat lives in the Control UI dashboard (gateway-backed).</p>
+    </header>
+    <main>
+      <button id="open-dashboard" class="action">Open Dashboard</button>
+      <button id="open-settings" class="action">Connection settings</button>
+      <pre id="status" class="log"></pre>
+    </main>
+    <script type="module">
+      import { invoke } from "@tauri-apps/api/core";
+
+      document.getElementById("open-dashboard")?.addEventListener("click", () => {
+        invoke("open_dashboard");
+      });
+      document.getElementById("open-settings")?.addEventListener("click", () => {
+        invoke("open_settings");
+      });
+
+      async function refresh() {
+        const status = document.getElementById("status");
+        try {
+          const gateway = await invoke("get_gateway_status");
+          const path = await invoke("get_control_ui_path");
+          status.textContent = [
+            "Gateway:",
+            gateway,
+            "",
+            "Bundled Control UI:",
+            path ?? "(not built — run pnpm ui:build)",
+          ].join("\n");
+        } catch (err) {
+          status.textContent = String(err);
+        }
+      }
+      refresh();
+    </script>
+  </body>
+</html>

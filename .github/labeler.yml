@@ -193,6 +193,14 @@
           - "apps/macos/**"
           - "docs/platforms/macos.md"
           - "docs/platforms/mac/**"
+"app: linux":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "apps/linux/**"
+          - "docs/platforms/linux.md"
+          - "docs/platforms/linux/**"
+          - "scripts/package-linux-app.sh"
+          - "scripts/linux-smoke.sh"
 "app: web-ui":
   - changed-files:
       - any-glob-to-any-file:

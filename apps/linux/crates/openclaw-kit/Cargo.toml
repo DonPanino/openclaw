@@ -1,0 +1,23 @@
+[package]
+name = "openclaw-kit"
+description = "OpenClaw Linux companion shared helpers"
+version = "2026.6.2"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+openclaw-protocol = { path = "../openclaw-protocol" }
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+dirs.workspace = true
+sha2.workspace = true
+hmac.workspace = true
+hex.workspace = true
+url.workspace = true
+tokio.workspace = true
+mdns-sd.workspace = true
+ed25519-dalek = { version = "2", features = ["rand_core"] }
+rand = "0.8"
+base64 = "0.22"

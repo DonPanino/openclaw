@@ -1,0 +1,17 @@
+[package]
+name = "openclaw-capture"
+description = "Linux portal-based screen/camera capture for OpenClaw node"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+zbus = { workspace = true, features = ["tokio"] }
+zbus_macros.workspace = true
+futures-util.workspace = true
+tokio = { workspace = true, features = ["process", "fs"] }

@@ -64,3 +64,7 @@
 /scripts/openclaw-npm-publish.sh @openclaw/openclaw-release-managers
 /scripts/openclaw-npm-release-check.ts @openclaw/openclaw-release-managers
 /scripts/release-check.ts @openclaw/openclaw-release-managers
+
+# Linux desktop companion (protocol, exec approvals, packaging).
+/apps/linux/ @tyler6204 @ngutman @mbelinky @openclaw/openclaw-secops
+/docs/platforms/linux/dev-setup.md @tyler6204 @ngutman @mbelinky

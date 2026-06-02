@@ -1,0 +1,26 @@
+# Maintainer: OpenClaw contributors
+pkgname=openclaw-app
+pkgver=2026.6.2
+pkgrel=1
+pkgdesc="OpenClaw Linux desktop companion"
+arch=('x86_64' 'aarch64')
+url="https://github.com/openclaw/openclaw"
+license=('MIT')
+depends=('openclaw' 'webkit2gtk-4.1' 'gtk3' 'libayatana-appindicator3' 'libnotify' 'xdg-desktop-portal' 'pipewire')
+makedepends=('rust' 'pnpm' 'nodejs' 'npm')
+source=("$url/archive/refs/tags/v$pkgver.tar.gz")
+sha256sums=('SKIP')
+
+build() {
+  cd "openclaw-openclaw-$pkgver"
+  pnpm install
+  pnpm ui:build
+  pnpm build
+  pnpm linux:build
+}
+
+package() {
+  cd "openclaw-openclaw-$pkgver"
+  install -Dm755 apps/linux/target/release/openclaw-linux-app "$pkgdir/usr/bin/openclaw-app"
+  install -Dm644 apps/linux/packaging/aur/openclaw-app.desktop "$pkgdir/usr/share/applications/openclaw-app.desktop"
+}

@@ -30,6 +30,8 @@ export type OverviewCardsProps = {
   modelAuthStatus: ModelAuthStatusResult | null;
   presenceCount: number;
   onNavigate: (tab: string) => void;
+  recentOpen: boolean;
+  onRecentToggle: (open: boolean) => void;
 };
 
 const DIGIT_RUN = /\d{3,}/g;
@@ -282,24 +284,41 @@ export function renderOverviewCards(props: OverviewCardsProps) {
 
     ${sessions.length > 0
       ? html`
-          <section class="ov-recent">
-            <h3 class="ov-recent__title">${t("overview.cards.recentSessions")}</h3>
-            <ul class="ov-recent__list">
-              ${sessions.map(
-                (s) => html`
-                  <li class="ov-recent__row">
-                    <span class="ov-recent__key"
-                      >${blurDigits(resolveSessionDisplayName(s.key, s))}</span
-                    >
-                    <span class="ov-recent__model">${s.model ?? ""}</span>
-                    <span class="ov-recent__time"
-                      >${s.updatedAt ? formatRelativeTimestamp(s.updatedAt) : ""}</span
-                    >
-                  </li>
-                `,
-              )}
-            </ul>
-          </section>
+          <details
+            class="card ov-section ov-recent"
+            ?open=${props.recentOpen}
+            @toggle=${(e: Event) => {
+              const target = e.target as HTMLDetailsElement;
+              if (target !== e.currentTarget) {
+                return;
+              }
+              props.onRecentToggle(target.open);
+            }}
+          >
+            <summary class="ov-expandable-toggle ov-section__summary">
+              <span class="ov-section__titles">
+                <span class="ov-section__title">${t("overview.cards.recentSessions")}</span>
+                <span class="ov-section__sub">${sessions.length}</span>
+              </span>
+            </summary>
+            <div class="ov-section__body ov-section__body--compact">
+              <ul class="ov-recent__list">
+                ${sessions.map(
+                  (s) => html`
+                    <li class="ov-recent__row">
+                      <span class="ov-recent__key"
+                        >${blurDigits(resolveSessionDisplayName(s.key, s))}</span
+                      >
+                      <span class="ov-recent__model">${s.model ?? ""}</span>
+                      <span class="ov-recent__time"
+                        >${s.updatedAt ? formatRelativeTimestamp(s.updatedAt) : ""}</span
+                      >
+                    </li>
+                  `,
+                )}
+              </ul>
+            </div>
+          </details>
         `
       : nothing}
   `;

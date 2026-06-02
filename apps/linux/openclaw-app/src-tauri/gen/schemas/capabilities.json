@@ -1,0 +1,1 @@
+{"default":{"identifier":"default","description":"Default OpenClaw Linux companion capabilities","local":true,"windows":["main","dashboard","settings","webchat","canvas-*"],"permissions":["core:default","shell:allow-execute","shell:allow-open","deep-link:default"]}}

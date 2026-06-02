@@ -1,0 +1,1750 @@
+
+/* ===== shell ===== */
+
+/*
+ * Nexus shell: global nav, topbar, page chrome, base controls.
+ * Reference: ui/DESIGN.md
+ */
+
+:root[data-theme="nexus"],
+:root[data-theme="nexus-light"] {
+  --shell-nav-width: 240px;
+  --shell-topbar-height: var(--nexus-sub-nav-height, 52px);
+}
+
+/* Global nav — dark: true black; light: frosted pearl sidebar */
+:root[data-theme="nexus"] .shell-nav,
+:root[data-theme="nexus"] .sidebar {
+  border-right: none;
+  background: #000000;
+}
+
+:root[data-theme="nexus-light"] .shell-nav,
+:root[data-theme="nexus-light"] .sidebar {
+  border-right: 1px solid var(--border);
+  background: var(--bg-accent);
+}
+
+:root[data-theme="nexus"] .sidebar-shell,
+:root[data-theme="nexus-light"] .sidebar-shell {
+  padding-top: 8px;
+}
+
+:root[data-theme="nexus"] .sidebar-shell__footer {
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+:root[data-theme="nexus-light"] .sidebar-shell__footer {
+  border-top-color: var(--border);
+}
+
+:root[data-theme="nexus"] .sidebar-brand__title {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+}
+
+:root[data-theme="nexus-light"] .sidebar-brand__title {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text-strong);
+}
+
+:root[data-theme="nexus"] .sidebar-brand__sub {
+  font-size: 12px;
+  letter-spacing: -0.01em;
+  color: rgba(255, 255, 255, 0.56);
+}
+
+:root[data-theme="nexus-light"] .sidebar-brand__sub {
+  font-size: 12px;
+  letter-spacing: -0.01em;
+  color: var(--muted);
+}
+
+:root[data-theme="nexus"] .sidebar-brand__logo,
+:root[data-theme="nexus-light"] .sidebar-brand__logo {
+  border-radius: var(--radius-sm);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .sidebar-version,
+:root[data-theme="nexus-light"] .sidebar-version {
+  border-radius: var(--radius-md);
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .sidebar-version__label,
+:root[data-theme="nexus-light"] .sidebar-version__label {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.44);
+}
+
+:root[data-theme="nexus"] .sidebar-version__text,
+:root[data-theme="nexus-light"] .sidebar-version__text {
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+:root[data-theme="nexus"] .nav-collapse-toggle,
+:root[data-theme="nexus-light"] .nav-collapse-toggle {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .nav-collapse-toggle:hover,
+:root[data-theme="nexus-light"] .nav-collapse-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+:root[data-theme="nexus"] .sidebar--collapsed .nav-item.active,
+:root[data-theme="nexus"] .sidebar--collapsed .nav-item--active,
+:root[data-theme="nexus-light"] .sidebar--collapsed .nav-item.active,
+:root[data-theme="nexus-light"] .sidebar--collapsed .nav-item--active {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: transparent;
+  box-shadow: none;
+}
+
+/* Nav items */
+:root[data-theme="nexus"] .nav-item,
+:root[data-theme="nexus-light"] .nav-item {
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: var(--radius-sm);
+  border: none;
+  color: var(--nexus-nav-fg);
+}
+
+:root[data-theme="nexus"] .nav-item__text,
+:root[data-theme="nexus-light"] .nav-item__text {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+:root[data-theme="nexus-light"] .nav-item:hover {
+  color: var(--nexus-nav-fg-strong);
+  background: var(--bg-hover);
+  border-color: transparent;
+}
+
+:root[data-theme="nexus-light"] .nav-item.active,
+:root[data-theme="nexus-light"] .nav-item--active {
+  color: var(--nexus-nav-fg-strong);
+  background: color-mix(in srgb, var(--primary) 10%, var(--card) 90%);
+  border-color: transparent;
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .nav-item:hover {
+  color: var(--nexus-nav-fg-strong);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: transparent;
+}
+
+:root[data-theme="nexus"] .nav-item.active,
+:root[data-theme="nexus"] .nav-item--active {
+  color: var(--nexus-nav-fg-strong);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: transparent;
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .nav-section__label {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.44);
+}
+
+:root[data-theme="nexus-light"] .nav-section__label {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Frosted sub-nav */
+:root[data-theme="nexus"] .topbar,
+:root[data-theme="nexus-light"] .topbar {
+  min-height: var(--nexus-sub-nav-height);
+  border-bottom: 1px solid var(--nexus-subnav-border);
+  background: var(--nexus-frosted-bg);
+  backdrop-filter: var(--nexus-frosted-blur);
+  -webkit-backdrop-filter: var(--nexus-frosted-blur);
+  color: var(--text);
+}
+
+:root[data-theme="nexus"] .sidebar-menu-trigger,
+:root[data-theme="nexus-light"] .sidebar-menu-trigger {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus-light"] .sidebar-menu-trigger {
+  border-color: var(--nexus-hairline);
+  background: #ffffff;
+}
+
+:root[data-theme="nexus"] .topnav-shell .dashboard-header__breadcrumb-current,
+:root[data-theme="nexus-light"] .topnav-shell .dashboard-header__breadcrumb-current {
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: 0.011em;
+  color: var(--text-strong);
+}
+
+:root[data-theme="nexus"] .page-title,
+:root[data-theme="nexus-light"] .page-title {
+  font-family: var(--font-display);
+  font-size: var(--nexus-type-display-md-size);
+  font-weight: var(--nexus-type-display-md-weight);
+  letter-spacing: var(--nexus-type-display-md-tracking);
+  line-height: var(--nexus-type-display-md-leading);
+}
+
+:root[data-theme="nexus"] .page-sub,
+:root[data-theme="nexus-light"] .page-sub {
+  font-size: 17px;
+  line-height: 1.47;
+  color: var(--muted);
+}
+
+:root[data-theme="nexus"] .content,
+:root[data-theme="nexus-light"] .content {
+  padding: 24px 32px 48px;
+}
+
+:root[data-theme="nexus"] .content > * + *,
+:root[data-theme="nexus-light"] .content > * + * {
+  margin-top: 24px;
+}
+
+/* Buttons */
+:root[data-theme="nexus"] .btn.primary,
+:root[data-theme="nexus"] .btn.cron-refresh-btn--loading,
+:root[data-theme="nexus-light"] .btn.primary,
+:root[data-theme="nexus-light"] .btn.cron-refresh-btn--loading {
+  min-height: 44px;
+  padding: 11px 22px;
+  border-radius: var(--radius-full);
+  border-color: var(--primary);
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font-size: 17px;
+  font-weight: 400;
+  letter-spacing: -0.022em;
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .btn.primary:hover,
+:root[data-theme="nexus-light"] .btn.primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .btn.primary:active,
+:root[data-theme="nexus-light"] .btn.primary:active,
+:root[data-theme="nexus"] .btn:active,
+:root[data-theme="nexus-light"] .btn:active {
+  transform: scale(0.95);
+}
+
+:root[data-theme="nexus"] .btn,
+:root[data-theme="nexus-light"] .btn {
+  font-weight: 400;
+  letter-spacing: -0.016em;
+  border-radius: var(--radius-sm);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .btn--ghost,
+:root[data-theme="nexus-light"] .btn--ghost {
+  color: var(--accent);
+}
+
+:root[data-theme="nexus"] .btn--icon,
+:root[data-theme="nexus-light"] .btn--icon {
+  border-radius: var(--radius-full);
+  background: rgba(210, 210, 215, 0.16);
+  border-color: transparent;
+}
+
+:root[data-theme="nexus-light"] .btn--icon {
+  background: rgba(210, 210, 215, 0.64);
+  color: #1d1d1f;
+}
+
+/* Cards + stats */
+:root[data-theme="nexus"] .card:not(.qs-card),
+:root[data-theme="nexus-light"] .card:not(.qs-card),
+:root[data-theme="nexus"] .stat,
+:root[data-theme="nexus-light"] .stat,
+:root[data-theme="nexus"] .stat-card,
+:root[data-theme="nexus-light"] .stat-card {
+  padding: 24px;
+  border-radius: var(--radius-lg);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .card:hover,
+:root[data-theme="nexus-light"] .card:hover,
+:root[data-theme="nexus"] .stat:hover,
+:root[data-theme="nexus-light"] .stat:hover {
+  box-shadow: none;
+  border-color: var(--border-strong);
+}
+
+:root[data-theme="nexus"] .card-title,
+:root[data-theme="nexus-light"] .card-title {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.022em;
+}
+
+:root[data-theme="nexus"] .card-sub,
+:root[data-theme="nexus-light"] .card-sub {
+  font-size: 14px;
+  line-height: 1.43;
+}
+
+:root[data-theme="nexus"] .stat-value,
+:root[data-theme="nexus-light"] .stat-value {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+:root[data-theme="nexus"] .stat-label,
+:root[data-theme="nexus-light"] .stat-label {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  text-transform: none;
+}
+
+/* Search + forms */
+:root[data-theme="nexus"] .topbar-search,
+:root[data-theme="nexus-light"] .topbar-search {
+  min-height: 44px;
+  padding: 0 20px;
+  border-radius: var(--radius-full);
+  font-size: 17px;
+  border-color: var(--input);
+  background: var(--bg-elevated);
+  color: var(--text);
+}
+
+:root[data-theme="nexus-light"] .topbar-search {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+:root[data-theme="nexus-light"] openclaw-app .topbar .btn--icon,
+:root[data-theme="nexus-light"] openclaw-app .topbar .btn--ghost.btn--icon {
+  color: var(--text);
+  background: var(--nexus-chip-fill);
+}
+
+:root[data-theme="nexus-light"] openclaw-app .topbar .btn--icon:hover,
+:root[data-theme="nexus-light"] openclaw-app .topbar .btn--ghost.btn--icon:hover {
+  color: var(--text-strong);
+  background: var(--bg-hover);
+}
+
+:root[data-theme="nexus"] .field input,
+:root[data-theme="nexus"] .field textarea,
+:root[data-theme="nexus"] .field select,
+:root[data-theme="nexus-light"] .field input,
+:root[data-theme="nexus-light"] .field textarea,
+:root[data-theme="nexus-light"] .field select {
+  min-height: 44px;
+  border-radius: var(--radius-md);
+  font-size: 17px;
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .label,
+:root[data-theme="nexus-light"] .label {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.016em;
+}
+
+/* Links */
+:root[data-theme="nexus"] a,
+:root[data-theme="nexus-light"] a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+:root[data-theme="nexus"] a:hover,
+:root[data-theme="nexus-light"] a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Login gate */
+:root[data-theme="nexus"] .login-gate__card,
+:root[data-theme="nexus-light"] .login-gate__card {
+  border-radius: var(--radius-lg);
+  box-shadow: none;
+  padding: 48px 40px;
+}
+
+:root[data-theme="nexus"] .login-gate__title,
+:root[data-theme="nexus-light"] .login-gate__title {
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-weight: 600;
+  letter-spacing: -0.022em;
+}
+
+:root[data-theme="nexus"] .login-gate__connect,
+:root[data-theme="nexus-light"] .login-gate__connect {
+  min-height: 44px;
+  border-radius: var(--radius-full);
+  font-size: 17px;
+  font-weight: 400;
+}
+
+@media (max-width: 640px) {
+  :root[data-theme="nexus"] .page-title,
+  :root[data-theme="nexus-light"] .page-title {
+    font-size: var(--nexus-type-tagline-size);
+    line-height: var(--nexus-type-tagline-leading);
+  }
+}
+
+@media (max-width: 419px) {
+  :root[data-theme="nexus"] .page-title,
+  :root[data-theme="nexus-light"] .page-title {
+    font-size: var(--nexus-type-lead-size);
+    line-height: var(--nexus-type-lead-leading);
+  }
+
+  :root[data-theme="nexus"] .content,
+  :root[data-theme="nexus-light"] .content {
+    padding: 16px 20px 32px;
+  }
+}
+
+/* ===== nav-sessions ===== */
+
+/*
+ * Nexus main nav sidebar — sessions, recent chats, utilities.
+ * Reference: ui/DESIGN.md — global-nav black bar + quiet session list
+ */
+
+:root[data-theme="nexus"] .sidebar-sessions,
+:root[data-theme="nexus-light"] .sidebar-sessions {
+  padding: 0 4px;
+}
+
+:root[data-theme="nexus"] .sidebar-new-session,
+:root[data-theme="nexus-light"] .sidebar-new-session {
+  min-height: 44px;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.016em;
+  box-shadow: none;
+  transform: none;
+}
+
+:root[data-theme="nexus"] .sidebar-new-session:hover:not(:disabled),
+:root[data-theme="nexus-light"] .sidebar-new-session:hover:not(:disabled) {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  transform: scale(0.98);
+}
+
+:root[data-theme="nexus"] .sidebar-recent-sessions__label-text,
+:root[data-theme="nexus-light"] .sidebar-recent-sessions__label-text {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.44);
+}
+
+:root[data-theme="nexus"] .sidebar-recent-session,
+:root[data-theme="nexus-light"] .sidebar-recent-session {
+  min-height: 44px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+:root[data-theme="nexus"] .sidebar-recent-session:hover,
+:root[data-theme="nexus-light"] .sidebar-recent-session:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+:root[data-theme="nexus"] .sidebar-recent-session--active,
+:root[data-theme="nexus-light"] .sidebar-recent-session--active {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .sidebar-recent-session__name,
+:root[data-theme="nexus-light"] .sidebar-recent-session__name {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+:root[data-theme="nexus"] .sidebar-recent-session__meta,
+:root[data-theme="nexus-light"] .sidebar-recent-session__meta {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.44);
+}
+
+:root[data-theme="nexus"] .sidebar-recent-session__dot,
+:root[data-theme="nexus-light"] .sidebar-recent-session__dot {
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .sidebar-recent-session--active .sidebar-recent-session__dot,
+:root[data-theme="nexus-light"] .sidebar-recent-session--active .sidebar-recent-session__dot {
+  background: var(--primary);
+}
+
+:root[data-theme="nexus"] .sidebar-utility-link,
+:root[data-theme="nexus-light"] .sidebar-utility-link {
+  min-height: 44px;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+:root[data-theme="nexus"] .sidebar-utility-link:hover,
+:root[data-theme="nexus-light"] .sidebar-utility-link:hover {
+  color: #ffffff;
+}
+
+:root[data-theme="nexus"] .sidebar-brand__eyebrow,
+:root[data-theme="nexus-light"] .sidebar-brand__eyebrow {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.44);
+}
+
+:root[data-theme="nexus"] .sidebar-session-select .chat-controls__session-trigger,
+:root[data-theme="nexus-light"] .sidebar-session-select .chat-controls__session-trigger {
+  min-height: 44px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.88);
+}
+
+:root[data-theme="nexus"] .sidebar-session-select .chat-session-picker,
+:root[data-theme="nexus-light"] .sidebar-session-select .chat-session-picker {
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #1d1d1f;
+  box-shadow: none;
+}
+
+:root[data-theme="nexus-light"] .sidebar-session-select .chat-session-picker {
+  background: #ffffff;
+  border-color: #e0e0e0;
+}
+
+:root[data-theme="nexus"] .sidebar-mode-switch,
+:root[data-theme="nexus-light"] .sidebar-mode-switch {
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+:root[data-theme="nexus"] .nav-collapse-toggle,
+:root[data-theme="nexus-light"] .nav-collapse-toggle {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+:root[data-theme="nexus"] .sidebar-connection-status--online,
+:root[data-theme="nexus-light"] .sidebar-connection-status--online {
+  box-shadow: none;
+}
+
+/* ===== light-nav ===== */
+
+/*
+ * Nexus light mode — sidebar + session list use content tokens, not dark chrome.
+ */
+
+:root[data-theme="nexus-light"] .sidebar-version {
+  border-color: var(--border);
+  background: var(--card);
+}
+
+:root[data-theme="nexus-light"] .sidebar-version__label {
+  color: var(--muted);
+}
+
+:root[data-theme="nexus-light"] .sidebar-version__text {
+  color: var(--text);
+}
+
+:root[data-theme="nexus-light"] .nav-collapse-toggle {
+  border-color: var(--border);
+  background: var(--card);
+  color: var(--muted);
+}
+
+:root[data-theme="nexus-light"] .nav-collapse-toggle:hover {
+  background: var(--bg-hover);
+  color: var(--text-strong);
+}
+
+:root[data-theme="nexus-light"] .sidebar-recent-sessions__label-text,
+:root[data-theme="nexus-light"] .sidebar-brand__eyebrow {
+  color: var(--muted);
+}
+
+:root[data-theme="nexus-light"] .sidebar-recent-session {
+  color: var(--text);
+}
+
+:root[data-theme="nexus-light"] .sidebar-recent-session:hover {
+  background: var(--bg-hover);
+  color: var(--text-strong);
+}
+
+:root[data-theme="nexus-light"] .sidebar-recent-session--active {
+  background: color-mix(in srgb, var(--primary) 10%, var(--card) 90%);
+  color: var(--text-strong);
+}
+
+:root[data-theme="nexus-light"] .sidebar-recent-session__meta {
+  color: var(--muted);
+}
+
+:root[data-theme="nexus-light"] .sidebar-utility-link {
+  color: var(--muted);
+}
+
+:root[data-theme="nexus-light"] .sidebar-utility-link:hover {
+  color: var(--text-strong);
+}
+
+:root[data-theme="nexus-light"] .sidebar-session-select .chat-controls__session-trigger {
+  border-color: var(--border);
+  background: var(--card);
+  color: var(--text);
+}
+
+:root[data-theme="nexus-light"] .sidebar-mode-switch {
+  border-top-color: var(--border);
+}
+
+:root[data-theme="nexus-light"] .sidebar-menu-trigger {
+  border-color: var(--border);
+  background: var(--card);
+  color: var(--text);
+}
+
+/* ===== global ===== */
+
+/*
+ * Nexus global primitives — every screen, every control.
+ * Reference: ui/DESIGN.md
+ */
+
+:root[data-theme="nexus"] openclaw-app,
+:root[data-theme="nexus-light"] openclaw-app {
+  font-family: var(--font-body);
+  font-size: var(--nexus-type-body-size, 17px);
+  line-height: var(--nexus-type-body-leading, 1.47);
+  letter-spacing: var(--nexus-type-body-tracking, -0.374px);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Press feedback on all actionable controls */
+:root[data-theme="nexus"] openclaw-app :where(button, [role="button"], .btn):active:not(:disabled),
+:root[data-theme="nexus-light"] openclaw-app :where(button, [role="button"], .btn):active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+/* Kill decorative lift hovers — Nexus uses border change only */
+:root[data-theme="nexus"] :where(.ov-card:hover, .sidebar-new-session:hover:not(:disabled)),
+:root[data-theme="nexus-light"] :where(.ov-card:hover, .sidebar-new-session:hover:not(:disabled)) {
+  transform: none;
+}
+
+/* Headings in content surfaces */
+:root[data-theme="nexus"] openclaw-app .content :where(h1, h2, h3),
+:root[data-theme="nexus-light"] openclaw-app .content :where(h1, h2, h3) {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.022em;
+  color: var(--text-strong);
+}
+
+:root[data-theme="nexus"] openclaw-app .content h1,
+:root[data-theme="nexus-light"] openclaw-app .content h1 {
+  font-size: 34px;
+  line-height: 1.15;
+}
+
+:root[data-theme="nexus"] openclaw-app .content h2,
+:root[data-theme="nexus-light"] openclaw-app .content h2 {
+  font-size: 28px;
+  line-height: 1.14;
+}
+
+:root[data-theme="nexus"] openclaw-app .content h3,
+:root[data-theme="nexus-light"] openclaw-app .content h3 {
+  font-size: 21px;
+  line-height: 1.19;
+}
+
+/* Grid layouts — utility card spacing */
+:root[data-theme="nexus"] .grid,
+:root[data-theme="nexus-light"] .grid,
+:root[data-theme="nexus"] .grid-cols-2,
+:root[data-theme="nexus-light"] .grid-cols-2 {
+  gap: 16px;
+}
+
+:root[data-theme="nexus"] .grid .card,
+:root[data-theme="nexus-light"] .grid .card {
+  height: auto;
+}
+
+/* Code blocks — hairline bordered panels */
+:root[data-theme="nexus"] .code-block,
+:root[data-theme="nexus-light"] .code-block,
+:root[data-theme="nexus"] .code-block-wrapper,
+:root[data-theme="nexus-light"] .code-block-wrapper {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .code-block-header,
+:root[data-theme="nexus-light"] .code-block-header {
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+}
+
+:root[data-theme="nexus"] .code-block-copy,
+:root[data-theme="nexus-light"] .code-block-copy {
+  border-radius: var(--radius-full);
+  min-height: 32px;
+  font-size: 14px;
+}
+
+/* Status lists — hairline rows */
+:root[data-theme="nexus"] .status-list div,
+:root[data-theme="nexus-light"] .status-list div {
+  font-size: 14px;
+  padding: 10px 0;
+  border-bottom-color: var(--border);
+}
+
+:root[data-theme="nexus"] .status-list .label,
+:root[data-theme="nexus-light"] .status-list .label {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+/* Notes + mono helpers */
+:root[data-theme="nexus"] .note-title,
+:root[data-theme="nexus-light"] .note-title {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+:root[data-theme="nexus"] openclaw-app .mono,
+:root[data-theme="nexus-light"] openclaw-app .mono {
+  font-family: var(--mono);
+  font-size: 14px;
+}
+
+/* Session links */
+:root[data-theme="nexus"] .session-link,
+:root[data-theme="nexus-light"] .session-link {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+:root[data-theme="nexus"] .session-link:hover,
+:root[data-theme="nexus-light"] .session-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Details/summary disclosure rows */
+:root[data-theme="nexus"] openclaw-app details > summary,
+:root[data-theme="nexus-light"] openclaw-app details > summary {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.016em;
+}
+
+/* Scrollbars — minimal */
+:root[data-theme="nexus"] openclaw-app ::-webkit-scrollbar-thumb,
+:root[data-theme="nexus-light"] openclaw-app ::-webkit-scrollbar-thumb {
+  background: rgba(127, 127, 127, 0.28);
+  border-radius: var(--radius-full);
+}
+
+/* Focus visible — Focus Blue ring everywhere in app */
+:root[data-theme="nexus"] openclaw-app :focus-visible,
+:root[data-theme="nexus-light"] openclaw-app :focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* Selection */
+:root[data-theme="nexus"] openclaw-app ::selection,
+:root[data-theme="nexus-light"] openclaw-app ::selection {
+  background: var(--selection-bg);
+  color: var(--selection-fg);
+}
+
+/* ===== components ===== */
+
+/*
+ * Nexus component grammars — buttons, chips, links, segmented controls.
+ * Source: ui/DESIGN.md components section.
+ */
+
+/* Primary pill — canonical action */
+:root[data-theme="nexus"] .btn.primary,
+:root[data-theme="nexus"] .btn.cron-refresh-btn--loading,
+:root[data-theme="nexus-light"] .btn.primary,
+:root[data-theme="nexus-light"] .btn.cron-refresh-btn--loading {
+  font-weight: var(--nexus-type-body-weight);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .btn.primary:hover,
+:root[data-theme="nexus-light"] .btn.primary:hover {
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .btn.primary:focus-visible,
+:root[data-theme="nexus-light"] .btn.primary:focus-visible {
+  outline: 2px solid var(--nexus-primary-focus);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+/* Secondary ghost pill — content CTAs only (compact chrome uses layout-fixes) */
+:root[data-theme="nexus"] openclaw-app .content .btn--ghost:not(.btn--icon),
+:root[data-theme="nexus-light"] openclaw-app .content .btn--ghost:not(.btn--icon) {
+  min-height: var(--nexus-touch-target);
+  padding: 11px 22px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--primary);
+  background: transparent;
+  color: var(--primary);
+  font-size: var(--nexus-type-body-size);
+  font-weight: var(--nexus-type-body-weight);
+  letter-spacing: var(--nexus-type-body-tracking);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] openclaw-app .content .btn--ghost:not(.btn--icon):hover:not(:disabled),
+:root[data-theme="nexus-light"] openclaw-app .content .btn--ghost:not(.btn--icon):hover:not(:disabled) {
+  background: color-mix(in srgb, var(--primary) 8%, transparent);
+  border-color: var(--primary);
+  box-shadow: none;
+}
+
+/* Compact ghost in toolbars — icon chip grammar */
+:root[data-theme="nexus"] .btn--ghost.btn--icon,
+:root[data-theme="nexus"] .btn--ghost.btn--sm.btn--icon,
+:root[data-theme="nexus-light"] .btn--ghost.btn--icon,
+:root[data-theme="nexus-light"] .btn--ghost.btn--sm.btn--icon {
+  padding: 0;
+  border-radius: var(--radius-full);
+  border: none;
+  background: var(--nexus-chip-fill);
+  color: var(--text);
+}
+
+/* Icon circular — sized in nexus-layout-fixes by region */
+:root[data-theme="nexus"] .content .btn--icon:not(.btn--ghost),
+:root[data-theme="nexus-light"] .content .btn--icon:not(.btn--ghost) {
+  border-radius: var(--radius-full);
+  border: none;
+  box-shadow: none;
+}
+
+/* Text links */
+:root[data-theme="nexus"] .content a:not(.btn):not(.nav-item):not(.pill),
+:root[data-theme="nexus-light"] .content a:not(.btn):not(.nav-item):not(.pill) {
+  color: var(--accent);
+}
+
+:root[data-theme="nexus"] .shell-nav a,
+:root[data-theme="nexus"] .sidebar a,
+:root[data-theme="nexus"] .topbar a {
+  color: inherit;
+}
+
+/* Sky link blue on dark tiles; action blue on light tiles */
+:root[data-theme="nexus"] :is(.card, .chat-bubble, .chat-text) a:not(.btn),
+:root[data-theme="nexus-light"] :is(.card, .chat-bubble, .chat-text) a:not(.btn) {
+  color: var(--nexus-link-on-surface);
+}
+
+/* Configurator / segmented chips */
+:root[data-theme="nexus"] .cfg-segmented__option,
+:root[data-theme="nexus-light"] .cfg-segmented__option,
+:root[data-theme="nexus"] .config-mode-toggle__btn,
+:root[data-theme="nexus-light"] .config-mode-toggle__btn {
+  min-height: var(--nexus-touch-target);
+  border-radius: var(--radius-full);
+  font-size: var(--nexus-type-caption-size);
+  font-weight: var(--nexus-type-caption-weight);
+  letter-spacing: var(--nexus-type-caption-tracking);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .cfg-segmented__option--selected,
+:root[data-theme="nexus-light"] .cfg-segmented__option--selected,
+:root[data-theme="nexus"] .config-mode-toggle__btn--active,
+:root[data-theme="nexus-light"] .config-mode-toggle__btn--active {
+  border: 2px solid var(--nexus-primary-focus);
+  background: color-mix(in srgb, var(--primary) 8%, var(--card) 92%);
+  box-shadow: none;
+}
+
+/* Store utility card grammar — token-driven surfaces */
+:root[data-theme="nexus"] :is(.card, .stat-card, .list-item),
+:root[data-theme="nexus-light"] :is(.card, .stat-card, .list-item) {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+/* Danger stays semantic, flat */
+:root[data-theme="nexus"] .btn.danger,
+:root[data-theme="nexus-light"] .btn.danger {
+  box-shadow: none;
+  border-radius: var(--radius-full);
+  min-height: var(--nexus-touch-target);
+}
+
+/* ===== quick-settings ===== */
+
+/*
+ * Nexus quick settings — layout fixes for appearance, personal, security rows.
+ */
+
+/* Appearance + security rows: stack label above control so pills never collide */
+:root[data-theme="nexus"] .qs-card--appearance .qs-row,
+:root[data-theme="nexus-light"] .qs-card--appearance .qs-row,
+:root[data-theme="nexus"] .qs-card--security .qs-row--tool-profile,
+:root[data-theme="nexus-light"] .qs-card--security .qs-row--tool-profile {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  padding: 6px 12px;
+  min-height: 0;
+}
+
+:root[data-theme="nexus"] .qs-card--appearance .qs-row + .qs-row,
+:root[data-theme="nexus-light"] .qs-card--appearance .qs-row + .qs-row {
+  border-top: 1px solid var(--border);
+}
+
+:root[data-theme="nexus"] .qs-card--appearance .qs-row__label,
+:root[data-theme="nexus-light"] .qs-card--appearance .qs-row__label,
+:root[data-theme="nexus"] .qs-card--security .qs-row--tool-profile .qs-row__label,
+:root[data-theme="nexus-light"] .qs-card--security .qs-row--tool-profile .qs-row__label {
+  width: 100%;
+  white-space: normal;
+  flex: 0 0 auto;
+}
+
+:root[data-theme="nexus"] .qs-card--appearance .qs-segmented,
+:root[data-theme="nexus-light"] .qs-card--appearance .qs-segmented,
+:root[data-theme="nexus"] .qs-card--security .qs-row--tool-profile .qs-segmented,
+:root[data-theme="nexus-light"] .qs-card--security .qs-row--tool-profile .qs-segmented {
+  justify-content: flex-start;
+  align-self: stretch;
+  width: 100%;
+  max-width: 100%;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 4px;
+  border-radius: var(--radius-lg);
+  background: var(--bg-accent);
+}
+
+:root[data-theme="nexus"] .qs-card--appearance .qs-segmented__btn,
+:root[data-theme="nexus-light"] .qs-card--appearance .qs-segmented__btn {
+  min-height: 30px;
+  padding: 4px 12px;
+  flex: 0 1 auto;
+}
+
+:root[data-theme="nexus"] .qs-card--appearance .qs-segmented__btn--compact,
+:root[data-theme="nexus-light"] .qs-card--appearance .qs-segmented__btn--compact {
+  min-height: 28px;
+  padding: 3px 8px;
+  font-size: 11px;
+}
+
+:root[data-theme="nexus"] .qs-card--appearance .qs-segmented__btn--active,
+:root[data-theme="nexus-light"] .qs-card--appearance .qs-segmented__btn--active {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .qs-card--security .qs-row--tool-profile .qs-segmented__btn,
+:root[data-theme="nexus-light"] .qs-card--security .qs-row--tool-profile .qs-segmented__btn {
+  min-height: 28px;
+  padding: 3px 8px;
+  font-size: 11px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Personal card — two-column identity grid */
+:root[data-theme="nexus"] .qs-card--personal .qs-identity-grid,
+:root[data-theme="nexus-light"] .qs-card--personal .qs-identity-grid {
+  grid-template-columns: 1fr;
+  gap: 8px;
+  padding: 8px 12px 10px;
+}
+
+@media (min-width: 960px) {
+  :root[data-theme="nexus"] .qs-card--personal .qs-identity-grid,
+  :root[data-theme="nexus-light"] .qs-card--personal .qs-identity-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+}
+
+/* Settings section nav — inactive pills stay neutral */
+:root[data-theme="nexus"] .settings-section-nav__item:not(.settings-section-nav__item--active),
+:root[data-theme="nexus-light"] .settings-section-nav__item:not(.settings-section-nav__item--active) {
+  background: var(--card);
+  border-color: var(--border);
+  color: var(--muted);
+}
+
+:root[data-theme="nexus"] .settings-section-nav__item--active,
+:root[data-theme="nexus-light"] .settings-section-nav__item--active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+/* ── Quick settings density ── */
+:root[data-theme="nexus"] .settings-section-nav,
+:root[data-theme="nexus-light"] .settings-section-nav {
+  gap: 6px;
+  padding: 10px 12px 6px;
+}
+
+:root[data-theme="nexus"] .settings-section-nav__item,
+:root[data-theme="nexus-light"] .settings-section-nav__item {
+  min-height: 32px;
+  padding: 5px 12px;
+  font-size: 13px;
+}
+
+:root[data-theme="nexus"] openclaw-app .qs-container,
+:root[data-theme="nexus-light"] openclaw-app .qs-container {
+  padding: 8px 12px 20px;
+}
+
+:root[data-theme="nexus"] openclaw-app .qs-header,
+:root[data-theme="nexus-light"] openclaw-app .qs-header {
+  margin-bottom: 8px;
+}
+
+:root[data-theme="nexus"] openclaw-app .qs-header__title,
+:root[data-theme="nexus-light"] openclaw-app .qs-header__title {
+  font-size: 20px;
+  gap: 8px;
+}
+
+:root[data-theme="nexus"] openclaw-app .qs-grid,
+:root[data-theme="nexus-light"] openclaw-app .qs-grid {
+  align-items: start;
+  gap: 8px;
+}
+
+:root[data-theme="nexus"] openclaw-app .qs-side-stack,
+:root[data-theme="nexus-light"] openclaw-app .qs-side-stack {
+  grid-template-rows: auto auto;
+  align-self: start;
+  gap: 8px;
+}
+
+:root[data-theme="nexus"] openclaw-app .qs-card__header,
+:root[data-theme="nexus-light"] openclaw-app .qs-card__header {
+  padding: 6px 12px;
+  background: transparent;
+  border-bottom: 1px solid var(--border);
+}
+
+:root[data-theme="nexus"] openclaw-app .qs-card__title,
+:root[data-theme="nexus-light"] openclaw-app .qs-card__title {
+  font-size: 14px;
+}
+
+:root[data-theme="nexus"] openclaw-app .qs-row,
+:root[data-theme="nexus-light"] openclaw-app .qs-row {
+  padding: 5px 12px;
+  min-height: 0;
+  gap: 8px;
+}
+
+:root[data-theme="nexus"] openclaw-app .qs-row__label,
+:root[data-theme="nexus-light"] openclaw-app .qs-row__label {
+  font-size: 13px;
+}
+
+:root[data-theme="nexus"] openclaw-app .qs-segmented,
+:root[data-theme="nexus-light"] openclaw-app .qs-segmented {
+  gap: 3px;
+  padding: 2px;
+}
+
+:root[data-theme="nexus"] openclaw-app .qs-segmented__btn,
+:root[data-theme="nexus-light"] openclaw-app .qs-segmented__btn {
+  min-height: 28px;
+  padding: 3px 9px;
+  font-size: 12px;
+}
+
+:root[data-theme="nexus"] openclaw-app .qs-segmented__btn--compact,
+:root[data-theme="nexus-light"] openclaw-app .qs-segmented__btn--compact {
+  min-height: 26px;
+  padding: 2px 7px;
+  font-size: 11px;
+}
+
+:root[data-theme="nexus"] openclaw-app .qs-segmented__btn--active,
+:root[data-theme="nexus-light"] openclaw-app .qs-segmented__btn--active {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border: none;
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] openclaw-app .qs-identity-grid,
+:root[data-theme="nexus-light"] openclaw-app .qs-identity-grid {
+  gap: 8px;
+  padding: 8px 12px 10px;
+}
+
+:root[data-theme="nexus"] openclaw-app .qs-identity-card,
+:root[data-theme="nexus-light"] openclaw-app .qs-identity-card {
+  padding: 8px;
+  gap: 6px;
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] openclaw-app .qs-identity-card__title,
+:root[data-theme="nexus-light"] openclaw-app .qs-identity-card__title {
+  font-size: 0.875rem;
+}
+
+:root[data-theme="nexus"] openclaw-app .qs-identity-card__source,
+:root[data-theme="nexus-light"] openclaw-app .qs-identity-card__source {
+  margin-top: 6px;
+  padding-top: 6px;
+}
+
+:root[data-theme="nexus"] openclaw-app .qs-identity-card__repair,
+:root[data-theme="nexus-light"] openclaw-app .qs-identity-card__repair {
+  margin-top: 6px;
+  gap: 6px;
+}
+
+:root[data-theme="nexus"] openclaw-app .qs-identity-card__actions,
+:root[data-theme="nexus-light"] openclaw-app .qs-identity-card__actions {
+  gap: 6px;
+}
+
+:root[data-theme="nexus"] openclaw-app .qs-user-avatar,
+:root[data-theme="nexus-light"] openclaw-app .qs-user-avatar,
+:root[data-theme="nexus"] openclaw-app .qs-assistant-avatar,
+:root[data-theme="nexus-light"] openclaw-app .qs-assistant-avatar {
+  width: 36px;
+  height: 36px;
+}
+
+:root[data-theme="nexus"] openclaw-app .qs-toggle,
+:root[data-theme="nexus-light"] openclaw-app .qs-toggle {
+  gap: 8px;
+}
+
+:root[data-theme="nexus"] openclaw-app .qs-toggle__track,
+:root[data-theme="nexus-light"] openclaw-app .qs-toggle__track {
+  width: 34px;
+  height: 20px;
+}
+
+:root[data-theme="nexus"] openclaw-app .qs-toggle__track::after,
+:root[data-theme="nexus-light"] openclaw-app .qs-toggle__track::after {
+  width: 14px;
+  height: 14px;
+}
+
+:root[data-theme="nexus"] openclaw-app .qs-toggle input:checked + .qs-toggle__track::after,
+:root[data-theme="nexus-light"] openclaw-app .qs-toggle input:checked + .qs-toggle__track::after {
+  transform: translateX(14px);
+}
+
+:root[data-theme="nexus"] openclaw-app .qs-empty,
+:root[data-theme="nexus-light"] openclaw-app .qs-empty {
+  padding: 8px 12px;
+  font-size: 13px;
+}
+
+:root[data-theme="nexus"] .content:has(.qs-container),
+:root[data-theme="nexus-light"] .content:has(.qs-container) {
+  padding: 8px 12px 16px;
+}
+
+/* ===== layout-fixes ===== */
+
+/*
+ * Layout fixes — prevent overlap/overflow across Claw Nexus theme.
+ */
+
+:root[data-theme="nexus"] openclaw-app,
+:root[data-theme="nexus-light"] openclaw-app {
+  min-height: 100%;
+  min-width: 0;
+}
+
+:root[data-theme="nexus"] .shell,
+:root[data-theme="nexus-light"] .shell {
+  min-width: 0;
+}
+
+:root[data-theme="nexus"] .topbar,
+:root[data-theme="nexus-light"] .topbar {
+  flex-wrap: nowrap;
+  gap: 8px;
+  overflow: hidden;
+}
+
+:root[data-theme="nexus"] .topnav-shell,
+:root[data-theme="nexus-light"] .topnav-shell {
+  min-width: 0;
+  overflow: hidden;
+}
+
+:root[data-theme="nexus"] .topnav-shell__actions,
+:root[data-theme="nexus-light"] .topnav-shell__actions {
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+:root[data-theme="nexus"] .topbar-theme-mode,
+:root[data-theme="nexus-light"] .topbar-theme-mode {
+  flex-shrink: 0;
+}
+
+:root[data-theme="nexus"] .dashboard-header__breadcrumb-current,
+:root[data-theme="nexus-light"] .dashboard-header__breadcrumb-current {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+/* Content scroll + spacing */
+:root[data-theme="nexus"] .content,
+:root[data-theme="nexus-light"] .content {
+  min-width: 0;
+  overscroll-behavior: contain;
+}
+
+:root[data-theme="nexus"] .content > .ov-dashboard,
+:root[data-theme="nexus-light"] .content > .ov-dashboard {
+  margin-top: 0;
+}
+
+:root[data-theme="nexus"] .content > * + *,
+:root[data-theme="nexus-light"] .content > * + * {
+  margin-top: 16px;
+}
+
+:root[data-theme="nexus"] .content > .ov-dashboard + *,
+:root[data-theme="nexus-light"] .content > .ov-dashboard + * {
+  margin-top: 16px;
+}
+
+/* Rows, fields, grids — allow shrink */
+:root[data-theme="nexus"] openclaw-app :is(.row, .ov-actions, .ov-field-row),
+:root[data-theme="nexus-light"] openclaw-app :is(.row, .ov-actions, .ov-field-row) {
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+:root[data-theme="nexus"] openclaw-app .field,
+:root[data-theme="nexus-light"] openclaw-app .field {
+  min-width: 0;
+}
+
+:root[data-theme="nexus"] openclaw-app :is(.grid, .stat-grid, .ov-cards, .ov-access-grid, .ov-bottom-grid),
+:root[data-theme="nexus-light"] openclaw-app :is(.grid, .stat-grid, .ov-cards, .ov-access-grid, .ov-bottom-grid) {
+  min-width: 0;
+}
+
+:root[data-theme="nexus"] .ov-card,
+:root[data-theme="nexus-light"] .ov-card {
+  min-width: 0;
+  overflow: hidden;
+}
+
+:root[data-theme="nexus"] .ov-card__value,
+:root[data-theme="nexus-light"] .ov-card__value,
+:root[data-theme="nexus"] .ov-card__hint,
+:root[data-theme="nexus-light"] .ov-card__hint {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Expandable section headers — badge + chevron must not overlap title */
+:root[data-theme="nexus"] .ov-expandable-toggle,
+:root[data-theme="nexus-light"] .ov-expandable-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+:root[data-theme="nexus"] .ov-section__titles,
+:root[data-theme="nexus-light"] .ov-section__titles {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+}
+
+:root[data-theme="nexus"] .ov-section__title,
+:root[data-theme="nexus-light"] .ov-section__title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:root[data-theme="nexus"] .ov-section__sub,
+:root[data-theme="nexus-light"] .ov-section__sub {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:root[data-theme="nexus"] .ov-count-badge,
+:root[data-theme="nexus-light"] .ov-count-badge {
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+:root[data-theme="nexus"] .ov-expandable-toggle::after,
+:root[data-theme="nexus-light"] .ov-expandable-toggle::after {
+  flex-shrink: 0;
+  margin-left: 4px;
+}
+
+:root[data-theme="nexus"] .ov-log-refresh,
+:root[data-theme="nexus-light"] .ov-log-refresh {
+  flex-shrink: 0;
+  margin-left: 4px;
+}
+
+:root[data-theme="nexus"] .ov-expandable-toggle .nav-item__icon,
+:root[data-theme="nexus-light"] .ov-expandable-toggle .nav-item__icon {
+  flex-shrink: 0;
+}
+
+/* Recent session rows */
+:root[data-theme="nexus"] .ov-recent__row,
+:root[data-theme="nexus-light"] .ov-recent__row {
+  min-width: 0;
+}
+
+:root[data-theme="nexus"] .ov-recent__key,
+:root[data-theme="nexus-light"] .ov-recent__key {
+  min-width: 0;
+}
+
+:root[data-theme="nexus"] .ov-recent__model,
+:root[data-theme="nexus-light"] .ov-recent__model {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Chat chrome — controls must wrap instead of overlapping composer */
+:root[data-theme="nexus"] .content-header,
+:root[data-theme="nexus-light"] .content-header {
+  flex-wrap: wrap;
+  align-items: center;
+  row-gap: 8px;
+  max-height: none;
+}
+
+:root[data-theme="nexus"] .chat-controls,
+:root[data-theme="nexus-light"] .chat-controls {
+  min-width: 0;
+  max-width: 100%;
+}
+
+:root[data-theme="nexus"] .chat-controls__session-row,
+:root[data-theme="nexus-light"] .chat-controls__session-row {
+  min-width: 0;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+:root[data-theme="nexus"] .chat-controls__session-trigger,
+:root[data-theme="nexus-light"] .chat-controls__session-trigger {
+  max-width: 100%;
+}
+
+:root[data-theme="nexus"] .chat-controls__session-trigger-label,
+:root[data-theme="nexus-light"] .chat-controls__session-trigger-label {
+  min-width: 0;
+}
+
+:root[data-theme="nexus"] .chat-header,
+:root[data-theme="nexus-light"] .chat-header {
+  flex-wrap: wrap;
+  row-gap: 8px;
+}
+
+:root[data-theme="nexus"] .chat-header__left,
+:root[data-theme="nexus"] .chat-header__right,
+:root[data-theme="nexus-light"] .chat-header__left,
+:root[data-theme="nexus-light"] .chat-header__right {
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+/* Touch targets: full size in forms/content, compact in chrome */
+:root[data-theme="nexus"] openclaw-app .content :is(.btn--icon, .btn.primary),
+:root[data-theme="nexus-light"] openclaw-app .content :is(.btn--icon, .btn.primary),
+:root[data-theme="nexus"] openclaw-app .ov-dashboard :is(.btn--icon, .btn.primary),
+:root[data-theme="nexus-light"] openclaw-app .ov-dashboard :is(.btn--icon, .btn.primary) {
+  min-width: var(--nexus-touch-target);
+  min-height: var(--nexus-touch-target);
+}
+
+:root[data-theme="nexus"] openclaw-app :is(.topbar, .sidebar, .chat-header, .chat-controls) .btn--icon,
+:root[data-theme="nexus-light"] openclaw-app :is(.topbar, .sidebar, .chat-header, .chat-controls) .btn--icon {
+  min-width: 32px;
+  min-height: 32px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+}
+
+:root[data-theme="nexus"] openclaw-app :is(.topbar, .sidebar) .btn--ghost.btn--icon,
+:root[data-theme="nexus-light"] openclaw-app :is(.topbar, .sidebar) .btn--ghost.btn--icon {
+  min-width: 32px;
+  min-height: 32px;
+}
+
+/* Ghost pill CTAs — not in compact toolbars */
+:root[data-theme="nexus"] openclaw-app .content .btn--ghost:not(.btn--icon):not(.btn--sm),
+:root[data-theme="nexus-light"] openclaw-app .content .btn--ghost:not(.btn--icon):not(.btn--sm) {
+  min-height: var(--nexus-touch-target);
+}
+
+:root[data-theme="nexus"] openclaw-app :is(.topbar, .chat-controls, .row) .btn--ghost:not(.btn--icon),
+:root[data-theme="nexus-light"] openclaw-app :is(.topbar, .chat-controls, .row) .btn--ghost:not(.btn--icon) {
+  min-height: 32px;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+}
+
+/* Config / tables */
+:root[data-theme="nexus"] openclaw-app :is(.config-layout, .config-nav, .sessions-table, .table-row),
+:root[data-theme="nexus-light"] openclaw-app :is(.config-layout, .config-nav, .sessions-table, .table-row) {
+  min-width: 0;
+}
+
+:root[data-theme="nexus"] openclaw-app .config-layout,
+:root[data-theme="nexus-light"] openclaw-app .config-layout {
+  overflow: hidden;
+}
+
+/* No forced equal-height cards in grids */
+:root[data-theme="nexus"] .grid .card,
+:root[data-theme="nexus-light"] .grid .card {
+  height: auto;
+}
+
+/* Chat header — legacy layout pins 44px height + nowrap; allow wrap in Nexus theme */
+:root[data-theme="nexus"] .content--chat .content-header,
+:root[data-theme="nexus-light"] .content--chat .content-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  row-gap: 8px;
+  min-height: 44px;
+  max-height: none;
+  overflow: visible;
+}
+
+:root[data-theme="nexus"] .content--chat .content-header > div:first-child,
+:root[data-theme="nexus-light"] .content--chat .content-header > div:first-child {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+:root[data-theme="nexus"] .content--chat .page-meta,
+:root[data-theme="nexus-light"] .content--chat .page-meta {
+  min-width: 0;
+  max-width: 100%;
+  flex-wrap: wrap;
+  height: auto;
+  min-height: 32px;
+}
+
+:root[data-theme="nexus"] .content--chat .chat-controls,
+:root[data-theme="nexus-light"] .content--chat .chat-controls {
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+
+:root[data-theme="nexus"] .content--chat .chat-controls__session-trigger-label,
+:root[data-theme="nexus-light"] .content--chat .chat-controls__session-trigger-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Overview subsection headers */
+:root[data-theme="nexus"] .ov-subsection__summary,
+:root[data-theme="nexus-light"] .ov-subsection__summary {
+  min-width: 0;
+  overflow: hidden;
+}
+
+:root[data-theme="nexus"] .ov-subsection__summary::after,
+:root[data-theme="nexus-light"] .ov-subsection__summary::after {
+  flex-shrink: 0;
+  margin-left: 4px;
+}
+
+/* Sidebar session rows */
+:root[data-theme="nexus"] .sidebar-recent-session,
+:root[data-theme="nexus-light"] .sidebar-recent-session {
+  min-width: 0;
+  overflow: hidden;
+}
+
+:root[data-theme="nexus"] .sidebar-recent-session__name,
+:root[data-theme="nexus-light"] .sidebar-recent-session__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+/* Topbar title cluster */
+:root[data-theme="nexus"] .topnav-shell__title,
+:root[data-theme="nexus-light"] .topnav-shell__title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Tables + config nav items */
+:root[data-theme="nexus"] openclaw-app :is(.table-row, .config-top-tabs__tab, .settings-section-nav__item),
+:root[data-theme="nexus-light"] openclaw-app :is(.table-row, .config-top-tabs__tab, .settings-section-nav__item) {
+  min-width: 0;
+}
+
+:root[data-theme="nexus"] openclaw-app .sessions-table td,
+:root[data-theme="nexus-light"] openclaw-app .sessions-table td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Agent chat column layout */
+:root[data-theme="nexus"] .agent-chat,
+:root[data-theme="nexus-light"] .agent-chat {
+  min-width: 0;
+  min-height: 0;
+}
+
+:root[data-theme="nexus"] .agent-chat__main,
+:root[data-theme="nexus-light"] .agent-chat__main {
+  min-width: 0;
+  min-height: 0;
+}
+
+:root[data-theme="nexus"] .chat-workspace-rail,
+:root[data-theme="nexus-light"] .chat-workspace-rail {
+  flex-shrink: 0;
+  min-width: 0;
+  max-width: min(360px, 40vw);
+}
+
+/* Modals stay within viewport */
+:root[data-theme="nexus"] openclaw-app :is(.modal-dialog, .md-preview-dialog),
+:root[data-theme="nexus-light"] openclaw-app :is(.modal-dialog, .md-preview-dialog) {
+  max-width: min(720px, calc(100vw - 32px));
+  max-height: min(860px, calc(100vh - 32px));
+  overflow: auto;
+}
+
+/* Stat cards in dashboard — tighter grid, no overflow */
+:root[data-theme="nexus"] .ov-dashboard .ov-cards,
+:root[data-theme="nexus-light"] .ov-dashboard .ov-cards {
+  grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+  gap: 8px;
+}
+
+:root[data-theme="nexus"] .ov-dashboard .stat-card,
+:root[data-theme="nexus-light"] .ov-dashboard .stat-card {
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* Page meta chips row */
+:root[data-theme="nexus"] .page-meta,
+:root[data-theme="nexus-light"] .page-meta {
+  flex-wrap: wrap;
+  min-width: 0;
+  gap: 6px;
+}
+
+/* ===== mobile ===== */
+
+/*
+ * Nexus theme — mobile layout overrides
+ * Reference: ui/DESIGN.md — global nav collapse, frosted chrome
+ */
+
+@media (max-width: 833px) {
+  :root[data-theme="nexus"] .shell-nav,
+  :root[data-theme="nexus-light"] .shell-nav {
+    background: #000000;
+    box-shadow: none;
+    border-right: none;
+  }
+
+  :root[data-theme="nexus"] .shell--nav-drawer-open .shell-nav,
+  :root[data-theme="nexus-light"] .shell--nav-drawer-open .shell-nav {
+    box-shadow: none;
+  }
+
+  :root[data-theme="nexus"] .shell-nav-backdrop,
+  :root[data-theme="nexus-light"] .shell-nav-backdrop {
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: saturate(180%) blur(12px);
+  }
+
+  :root[data-theme="nexus"] .sidebar--collapsed .nav-item--active::before,
+  :root[data-theme="nexus"] .sidebar--collapsed .nav-item.active::before,
+  :root[data-theme="nexus-light"] .sidebar--collapsed .nav-item--active::before,
+  :root[data-theme="nexus-light"] .sidebar--collapsed .nav-item.active::before {
+    box-shadow: none;
+    background: var(--primary);
+  }
+
+  :root[data-theme="nexus"] .agent-chat__input,
+  :root[data-theme="nexus-light"] .agent-chat__input {
+    margin-left: 12px;
+    margin-right: 12px;
+    margin-bottom: 12px;
+  }
+
+  :root[data-theme="nexus"] .content,
+  :root[data-theme="nexus-light"] .content {
+    padding: 16px 16px 24px;
+  }
+
+  :root[data-theme="nexus"] .topbar,
+  :root[data-theme="nexus-light"] .topbar {
+    padding: 0 16px;
+  }
+
+  :root[data-theme="nexus"] .md-preview-dialog__panel,
+  :root[data-theme="nexus-light"] .md-preview-dialog__panel {
+    width: calc(100vw - 24px);
+    margin: 12px auto;
+    min-height: auto;
+  }
+
+  :root[data-theme="nexus"] .cqc-container,
+  :root[data-theme="nexus-light"] .cqc-container {
+    width: calc(100vw - 32px);
+    padding: 24px 20px;
+  }
+
+  :root[data-theme="nexus"] .chat-sidebar,
+  :root[data-theme="nexus-light"] .chat-sidebar,
+  :root[data-theme="nexus"] .sidebar-panel,
+  :root[data-theme="nexus-light"] .sidebar-panel {
+    background: var(--bg-accent);
+    border-left-color: var(--border);
+    box-shadow: none;
+  }
+
+  :root[data-theme="nexus-light"] .chat-sidebar,
+  :root[data-theme="nexus-light"] .sidebar-panel {
+    background: #f5f5f7;
+    border-left-color: #e0e0e0;
+  }
+
+  :root[data-theme="nexus"] .chat-header,
+  :root[data-theme="nexus-light"] .chat-header {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  :root[data-theme="nexus"] .chat-controls__session-trigger,
+  :root[data-theme="nexus-light"] .chat-controls__session-trigger {
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 419px) {
+  :root[data-theme="nexus"] .page-title,
+  :root[data-theme="nexus-light"] .page-title {
+    font-size: 28px;
+  }
+
+  :root[data-theme="nexus"] .topnav-shell .dashboard-header__breadcrumb-current,
+  :root[data-theme="nexus-light"] .topnav-shell .dashboard-header__breadcrumb-current {
+    font-size: 17px;
+  }
+}

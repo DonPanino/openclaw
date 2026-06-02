@@ -1,0 +1,1854 @@
+
+/* ===== surfaces ===== */
+
+/*
+ * Nexus surfaces: config, settings, tables, modals, pills, command palette.
+ * Reference: ui/DESIGN.md — store-utility-card, configurator chips, footer density
+ */
+
+/* Pills + chips — pearl capsule / configurator chip */
+:root[data-theme="nexus"] .pill,
+:root[data-theme="nexus-light"] .pill {
+  min-height: 32px;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.016em;
+  background: color-mix(in srgb, var(--card) 90%, transparent);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus-light"] .pill {
+  background: var(--nexus-pearl, #fafafc);
+  border-color: #f0f0f0;
+}
+
+:root[data-theme="nexus"] .chip,
+:root[data-theme="nexus-light"] .chip {
+  border-radius: var(--radius-full);
+  font-size: 14px;
+  font-weight: 400;
+  padding: 8px 14px;
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .agent-chip-input,
+:root[data-theme="nexus-light"] .agent-chip-input {
+  border-radius: var(--radius-md);
+  border-color: var(--border);
+  min-height: 44px;
+  padding: 6px 10px;
+}
+
+/* Tables + sessions */
+:root[data-theme="nexus"] .table-head,
+:root[data-theme="nexus-light"] .table-head {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+}
+
+:root[data-theme="nexus"] .table-row,
+:root[data-theme="nexus-light"] .table-row {
+  min-height: 44px;
+  font-size: 14px;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .table-row:hover,
+:root[data-theme="nexus-light"] .table-row:hover {
+  background: color-mix(in srgb, var(--primary) 6%, transparent);
+}
+
+:root[data-theme="nexus"] .sessions-table tbody tr.session-data-row > td,
+:root[data-theme="nexus-light"] .sessions-table tbody tr.session-data-row > td {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  font-size: 14px;
+}
+
+:root[data-theme="nexus"] .sessions-filter-panel,
+:root[data-theme="nexus-light"] .sessions-filter-panel {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .session-compaction-trigger,
+:root[data-theme="nexus-light"] .session-compaction-trigger {
+  border-radius: var(--radius-full);
+  font-size: 14px;
+  border: 1px solid var(--border);
+  background: transparent;
+  box-shadow: none;
+}
+
+/* Config layout — full-bleed utility panel */
+:root[data-theme="nexus"] .config-layout,
+:root[data-theme="nexus-light"] .config-layout {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--card);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus-light"] .config-layout {
+  background: #ffffff;
+  border-color: #e0e0e0;
+}
+
+:root[data-theme="nexus"] .config-nav,
+:root[data-theme="nexus-light"] .config-nav {
+  border-right: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg-accent) 88%, transparent);
+}
+
+:root[data-theme="nexus-light"] .config-nav {
+  background: #f5f5f7;
+}
+
+:root[data-theme="nexus"] .config-top-tabs__tab,
+:root[data-theme="nexus-light"] .config-top-tabs__tab {
+  min-height: 44px;
+  font-size: 14px;
+  font-weight: 400;
+  border-radius: var(--radius-full);
+}
+
+:root[data-theme="nexus"] .config-top-tabs__tab.active,
+:root[data-theme="nexus-light"] .config-top-tabs__tab.active {
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  color: var(--accent);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .config-section-card,
+:root[data-theme="nexus-light"] .config-section-card {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .config-section-card:hover,
+:root[data-theme="nexus-light"] .config-section-card:hover {
+  box-shadow: none;
+  border-color: var(--border-strong);
+}
+
+:root[data-theme="nexus"] .config-section-card__title,
+:root[data-theme="nexus-light"] .config-section-card__title {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.022em;
+}
+
+:root[data-theme="nexus"] .config-section-hero__title,
+:root[data-theme="nexus-light"] .config-section-hero__title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+:root[data-theme="nexus"] .config-search__input,
+:root[data-theme="nexus-light"] .config-search__input {
+  min-height: 44px;
+  border-radius: var(--radius-full);
+  font-size: 17px;
+  padding-left: 42px;
+}
+
+:root[data-theme="nexus"] .config-form-section__title,
+:root[data-theme="nexus-light"] .config-form-section__title {
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: 0.011em;
+}
+
+/* Quick settings — flat card chrome only (spacing/density in nexus-core quick-settings) */
+:root[data-theme="nexus"] .qs-card,
+:root[data-theme="nexus-light"] .qs-card {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--card);
+  padding: 0;
+  box-shadow: none;
+}
+
+:root[data-theme="nexus-light"] .qs-card {
+  background: #ffffff;
+  border-color: #e0e0e0;
+}
+
+:root[data-theme="nexus"] .qs-card:hover,
+:root[data-theme="nexus-light"] .qs-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .qs-card__title,
+:root[data-theme="nexus-light"] .qs-card__title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.022em;
+}
+
+:root[data-theme="nexus"] .qs-header__title,
+:root[data-theme="nexus-light"] .qs-header__title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* Command palette */
+:root[data-theme="nexus"] .cmd-palette,
+:root[data-theme="nexus-light"] .cmd-palette {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--card);
+  box-shadow: none;
+  overflow: hidden;
+}
+
+:root[data-theme="nexus-light"] .cmd-palette {
+  background: #ffffff;
+  border-color: #e0e0e0;
+}
+
+:root[data-theme="nexus"] .cmd-palette__input,
+:root[data-theme="nexus-light"] .cmd-palette__input {
+  min-height: 52px;
+  font-size: 17px;
+  letter-spacing: -0.022em;
+  border-bottom: 1px solid var(--border);
+}
+
+:root[data-theme="nexus"] .cmd-palette__item,
+:root[data-theme="nexus-light"] .cmd-palette__item {
+  min-height: 44px;
+  font-size: 14px;
+  border-radius: var(--radius-sm);
+}
+
+:root[data-theme="nexus"] .cmd-palette__item:hover,
+:root[data-theme="nexus"] .cmd-palette__item--active,
+:root[data-theme="nexus-light"] .cmd-palette__item:hover,
+:root[data-theme="nexus-light"] .cmd-palette__item--active {
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
+}
+
+:root[data-theme="nexus"] .cmd-palette-overlay::backdrop,
+:root[data-theme="nexus-light"] .cmd-palette-overlay::backdrop {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+}
+
+/* Command palette */
+:root[data-theme="nexus"] .theme-orb__trigger,
+:root[data-theme="nexus-light"] .theme-orb__trigger {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  background: rgba(210, 210, 215, 0.16);
+  border: none;
+  box-shadow: none;
+}
+
+:root[data-theme="nexus-light"] .theme-orb__trigger {
+  background: rgba(210, 210, 215, 0.64);
+}
+
+:root[data-theme="nexus"] .theme-orb__menu,
+:root[data-theme="nexus-light"] .theme-orb__menu {
+  border-radius: var(--radius-full);
+  box-shadow: none;
+  border: 1px solid var(--border);
+}
+
+:root[data-theme="nexus"] .topbar-theme-mode,
+:root[data-theme="nexus-light"] .topbar-theme-mode {
+  border-radius: var(--radius-full);
+  border-color: var(--border);
+  background: color-mix(in srgb, var(--card) 80%, transparent);
+}
+
+:root[data-theme="nexus"] .topbar-theme-mode__btn,
+:root[data-theme="nexus-light"] .topbar-theme-mode__btn {
+  width: 36px;
+  height: 36px;
+}
+
+:root[data-theme="nexus"] .topbar-theme-mode__btn--active,
+:root[data-theme="nexus-light"] .topbar-theme-mode__btn--active {
+  background: color-mix(in srgb, var(--primary) 14%, transparent);
+  border-color: color-mix(in srgb, var(--primary) 24%, transparent);
+  color: var(--accent);
+}
+
+/* Usage + activity panels */
+:root[data-theme="nexus"] .usage-page .card,
+:root[data-theme="nexus-light"] .usage-page .card,
+:root[data-theme="nexus"] .usage-overview-card,
+:root[data-theme="nexus-light"] .usage-overview-card,
+:root[data-theme="nexus"] .usage-insight-card,
+:root[data-theme="nexus-light"] .usage-insight-card,
+:root[data-theme="nexus"] .activity-page .card,
+:root[data-theme="nexus-light"] .activity-page .card {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .usage-header-title,
+:root[data-theme="nexus-light"] .usage-header-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* Workboard + dreams */
+:root[data-theme="nexus"] .workboard-card,
+:root[data-theme="nexus-light"] .workboard-card {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .workboard-card--openable:hover,
+:root[data-theme="nexus-light"] .workboard-card--openable:hover {
+  border-color: var(--border-strong);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .workboard-card h3,
+:root[data-theme="nexus-light"] .workboard-card h3 {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.022em;
+}
+
+:root[data-theme="nexus"] .dreams-page .card,
+:root[data-theme="nexus-light"] .dreams-page .card {
+  border-radius: var(--radius-lg);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .dreams__tab,
+:root[data-theme="nexus-light"] .dreams__tab {
+  min-height: 44px;
+  padding: 8px 18px;
+  border-radius: var(--radius-full);
+  font-size: 14px;
+  font-weight: 400;
+}
+
+:root[data-theme="nexus"] .dreams__tab--active,
+:root[data-theme="nexus-light"] .dreams__tab--active {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--primary);
+}
+
+/* Cron + agents surfaces */
+:root[data-theme="nexus"] .cron-page .card,
+:root[data-theme="nexus-light"] .cron-page .card,
+:root[data-theme="nexus"] .agents-page .card,
+:root[data-theme="nexus-light"] .agents-page .card {
+  border-radius: var(--radius-lg);
+  box-shadow: none;
+}
+
+/* Toggle switches — pill grammar */
+:root[data-theme="nexus"] .qs-toggle__track,
+:root[data-theme="nexus-light"] .qs-toggle__track {
+  border-radius: var(--radius-full);
+}
+
+/* Config mode toggle */
+:root[data-theme="nexus"] .config-mode-toggle__btn,
+:root[data-theme="nexus-light"] .config-mode-toggle__btn {
+  min-height: 36px;
+  border-radius: var(--radius-full);
+  font-size: 14px;
+}
+
+:root[data-theme="nexus"] .config-mode-toggle__btn.active,
+:root[data-theme="nexus-light"] .config-mode-toggle__btn.active {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--primary);
+}
+
+/* Workboard inputs — search pill */
+:root[data-theme="nexus"] .workboard .input,
+:root[data-theme="nexus-light"] .workboard .input {
+  min-height: 44px;
+  border-radius: var(--radius-full);
+  font-size: 17px;
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .workboard .input:focus,
+:root[data-theme="nexus-light"] .workboard .input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 20%, transparent);
+}
+
+/* Remove decorative gradients on claw theme surfaces */
+:root[data-theme="nexus"] .nav-item.active,
+:root[data-theme="nexus"] .nav-item--active,
+:root[data-theme="nexus-light"] .settings-section-nav__item--active {
+  background-image: none;
+}
+
+/* ===== screens ===== */
+
+/*
+ * Nexus styling for every remaining Control UI screen/view.
+ * Overview, channels, MCP, config appearance, dreams, instances, debug, etc.
+ */
+
+/* ── Overview ── */
+:root[data-theme="nexus"] .ov-card,
+:root[data-theme="nexus-light"] .ov-card {
+  border-radius: var(--radius-lg);
+  padding: 18px 16px;
+  box-shadow: none;
+  transform: none;
+}
+
+:root[data-theme="nexus"] .ov-card:hover,
+:root[data-theme="nexus-light"] .ov-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: none;
+  transform: none;
+}
+
+:root[data-theme="nexus"] .ov-card__label,
+:root[data-theme="nexus-light"] .ov-card__label {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+:root[data-theme="nexus"] .ov-card__value,
+:root[data-theme="nexus-light"] .ov-card__value {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.022em;
+}
+
+:root[data-theme="nexus"] .ov-card__hint,
+:root[data-theme="nexus-light"] .ov-card__hint {
+  font-size: 14px;
+  line-height: 1.43;
+}
+
+:root[data-theme="nexus"] .ov-attention-item,
+:root[data-theme="nexus-light"] .ov-attention-item {
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .ov-attention-title,
+:root[data-theme="nexus-light"] .ov-attention-title {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.016em;
+}
+
+:root[data-theme="nexus"] .ov-recent__title,
+:root[data-theme="nexus-light"] .ov-recent__title {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+:root[data-theme="nexus"] .ov-recent__row,
+:root[data-theme="nexus-light"] .ov-recent__row {
+  border-radius: var(--radius-md);
+  min-height: 44px;
+  font-size: 14px;
+}
+
+:root[data-theme="nexus"] .ov-expandable-toggle,
+:root[data-theme="nexus-light"] .ov-expandable-toggle {
+  min-height: 44px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.016em;
+}
+
+:root[data-theme="nexus"] .ov-event-log,
+:root[data-theme="nexus-light"] .ov-event-log,
+:root[data-theme="nexus"] .ov-log-tail,
+:root[data-theme="nexus-light"] .ov-log-tail {
+  border-radius: var(--radius-lg);
+  box-shadow: none;
+}
+
+/* ── Channels / account cards ── */
+:root[data-theme="nexus"] .account-card,
+:root[data-theme="nexus-light"] .account-card {
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  box-shadow: none;
+}
+
+:root[data-theme="nexus-light"] .account-card {
+  background: #ffffff;
+  border-color: #e0e0e0;
+}
+
+:root[data-theme="nexus"] .account-card-title,
+:root[data-theme="nexus-light"] .account-card-title {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.022em;
+}
+
+/* ── MCP page ── */
+:root[data-theme="nexus"] .mcp-server-row,
+:root[data-theme="nexus-light"] .mcp-server-row {
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  box-shadow: none;
+}
+
+:root[data-theme="nexus-light"] .mcp-server-row {
+  background: #ffffff;
+  border-color: #e0e0e0;
+}
+
+:root[data-theme="nexus"] .mcp-server-row__title,
+:root[data-theme="nexus-light"] .mcp-server-row__title {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.022em;
+}
+
+:root[data-theme="nexus"] .mcp-server-row__meta,
+:root[data-theme="nexus-light"] .mcp-server-row__meta {
+  font-size: 14px;
+}
+
+:root[data-theme="nexus"] .mcp-command-card__grid code,
+:root[data-theme="nexus-light"] .mcp-command-card__grid code,
+:root[data-theme="nexus"] .mcp-server-row__actions code,
+:root[data-theme="nexus-light"] .mcp-server-row__actions code {
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+}
+
+/* ── Config appearance + notifications ── */
+:root[data-theme="nexus"] .settings-appearance__section,
+:root[data-theme="nexus-light"] .settings-appearance__section {
+  border-radius: var(--radius-lg);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus-light"] .settings-appearance__section {
+  background: #ffffff;
+  border-color: #e0e0e0;
+}
+
+:root[data-theme="nexus"] .settings-appearance__heading,
+:root[data-theme="nexus-light"] .settings-appearance__heading {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.022em;
+  color: var(--text-strong);
+}
+
+:root[data-theme="nexus"] .settings-theme-card,
+:root[data-theme="nexus-light"] .settings-theme-card {
+  border-radius: var(--radius-lg);
+  min-height: 72px;
+  box-shadow: none;
+  transform: none;
+}
+
+:root[data-theme="nexus"] .settings-theme-card:hover,
+:root[data-theme="nexus-light"] .settings-theme-card:hover {
+  box-shadow: none;
+  transform: none;
+  border-color: var(--border-strong);
+}
+
+:root[data-theme="nexus"] .settings-theme-card--selected,
+:root[data-theme="nexus-light"] .settings-theme-card--selected {
+  border-color: color-mix(in srgb, var(--primary) 40%, var(--border) 60%);
+  background: color-mix(in srgb, var(--primary) 8%, var(--card) 92%);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .settings-notifications__card,
+:root[data-theme="nexus-light"] .settings-notifications__card {
+  border-radius: var(--radius-lg);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .settings-notifications__title,
+:root[data-theme="nexus-light"] .settings-notifications__title {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.022em;
+}
+
+:root[data-theme="nexus"] .settings-notifications__badge,
+:root[data-theme="nexus-light"] .settings-notifications__badge {
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+/* ── Dreams / dreaming — flat decorative chrome on default theme ── */
+:root[data-theme="nexus"] .dreams__lobster,
+:root[data-theme="nexus-light"] .dreams__lobster {
+  filter: none;
+}
+
+:root[data-theme="nexus"] .dreams__glow,
+:root[data-theme="nexus-light"] .dreams__glow {
+  opacity: 0.35;
+  background: radial-gradient(ellipse, color-mix(in srgb, var(--primary) 12%, transparent) 0%, transparent 70%);
+}
+
+:root[data-theme="nexus"] .dreams__moon,
+:root[data-theme="nexus-light"] .dreams__moon {
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .dreaming-header-controls__mode,
+:root[data-theme="nexus-light"] .dreaming-header-controls__mode {
+  min-height: 44px;
+  border-radius: var(--radius-full);
+  font-size: 14px;
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .dreaming-header-controls__mode--active,
+:root[data-theme="nexus-light"] .dreaming-header-controls__mode--active {
+  background: color-mix(in srgb, var(--primary) 14%, var(--card) 86%);
+  border-color: color-mix(in srgb, var(--primary) 28%, var(--border) 72%);
+  box-shadow: none;
+}
+
+/* ── Login gate extras ── */
+:root[data-theme="nexus"] .login-gate,
+:root[data-theme="nexus-light"] .login-gate {
+  background: var(--bg);
+}
+
+:root[data-theme="nexus-light"] .login-gate {
+  background: #f5f5f7;
+}
+
+:root[data-theme="nexus"] .login-gate__failure,
+:root[data-theme="nexus-light"] .login-gate__failure {
+  border-radius: var(--radius-lg);
+  border: 1px solid color-mix(in srgb, var(--danger) 28%, var(--border) 72%);
+  background: color-mix(in srgb, var(--danger) 6%, var(--card) 94%);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .login-gate__command,
+:root[data-theme="nexus-light"] .login-gate__command {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+
+/* ── Pills + labels (global in content) ── */
+:root[data-theme="nexus"] .pill,
+:root[data-theme="nexus-light"] .pill {
+  min-height: 32px;
+  border-radius: var(--radius-full);
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.016em;
+}
+
+:root[data-theme="nexus"] .label,
+:root[data-theme="nexus-light"] .label {
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.016em;
+}
+
+/* ── Stats row on various pages ── */
+:root[data-theme="nexus"] .stat,
+:root[data-theme="nexus-light"] .stat,
+:root[data-theme="nexus"] .stat-card,
+:root[data-theme="nexus-light"] .stat-card {
+  border-radius: var(--radius-lg);
+}
+
+:root[data-theme="nexus"] .stat-value,
+:root[data-theme="nexus-light"] .stat-value {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.022em;
+}
+
+/* ── Gateway URL confirmation + small dialogs ── */
+:root[data-theme="nexus"] .gateway-url-confirm,
+:root[data-theme="nexus-light"] .gateway-url-confirm {
+  border-radius: var(--radius-lg);
+  box-shadow: none;
+}
+
+/* ── Nodes / instances list rows ── */
+:root[data-theme="nexus"] .node-card,
+:root[data-theme="nexus-light"] .node-card,
+:root[data-theme="nexus"] .instance-card,
+:root[data-theme="nexus-light"] .instance-card {
+  border-radius: var(--radius-lg);
+  box-shadow: none;
+}
+
+/* ── Skills page toggles — iOS-style, flat knob ── */
+:root[data-theme="nexus"] .skill-toggle::after,
+:root[data-theme="nexus-light"] .skill-toggle::after {
+  box-shadow: none;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* ── Config form sections ── */
+:root[data-theme="nexus"] .config-section,
+:root[data-theme="nexus-light"] .config-section,
+:root[data-theme="nexus"] .config-sidebar-item,
+:root[data-theme="nexus-light"] .config-sidebar-item {
+  border-radius: var(--radius-md);
+}
+
+:root[data-theme="nexus"] .config-sidebar-item--active,
+:root[data-theme="nexus-light"] .config-sidebar-item--active {
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
+  box-shadow: none;
+}
+
+/* ── Activity feed ── */
+:root[data-theme="nexus"] .activity-item,
+:root[data-theme="nexus-light"] .activity-item,
+:root[data-theme="nexus"] .activity-card,
+:root[data-theme="nexus-light"] .activity-card {
+  border-radius: var(--radius-lg);
+  box-shadow: none;
+}
+
+/* ── Usage charts panels ── */
+:root[data-theme="nexus"] .usage-panel,
+:root[data-theme="nexus-light"] .usage-panel,
+:root[data-theme="nexus"] .usage-metric,
+:root[data-theme="nexus-light"] .usage-metric {
+  border-radius: var(--radius-lg);
+  box-shadow: none;
+}
+
+/* ── Workboard kanban ── */
+:root[data-theme="nexus"] .workboard-column,
+:root[data-theme="nexus-light"] .workboard-column,
+:root[data-theme="nexus"] .workboard-card,
+:root[data-theme="nexus-light"] .workboard-card {
+  border-radius: var(--radius-lg);
+  box-shadow: none;
+}
+
+/* ── Debug panel ── */
+:root[data-theme="nexus"] .debug-panel,
+:root[data-theme="nexus-light"] .debug-panel,
+:root[data-theme="nexus"] .debug-event-log,
+:root[data-theme="nexus-light"] .debug-event-log {
+  border-radius: var(--radius-lg);
+  box-shadow: none;
+}
+
+/* ── Exec approval ── */
+:root[data-theme="nexus"] .exec-approval-card,
+:root[data-theme="nexus-light"] .exec-approval-card {
+  border-radius: var(--radius-lg);
+}
+
+/* ── Cron surfaces ── */
+:root[data-theme="nexus"] .cron-job-row,
+:root[data-theme="nexus-light"] .cron-job-row,
+:root[data-theme="nexus"] .cqc-preset-card,
+:root[data-theme="nexus-light"] .cqc-preset-card,
+:root[data-theme="nexus"] .cqc-radio-card,
+:root[data-theme="nexus-light"] .cqc-radio-card {
+  border-radius: var(--radius-lg);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .cqc-preset-card:hover,
+:root[data-theme="nexus-light"] .cqc-preset-card:hover,
+:root[data-theme="nexus"] .cqc-radio-card:hover,
+:root[data-theme="nexus-light"] .cqc-radio-card:hover {
+  box-shadow: none;
+  border-color: var(--border-strong);
+}
+
+/* ── Agents panels ── */
+:root[data-theme="nexus"] .agent-panel,
+:root[data-theme="nexus-light"] .agent-panel,
+:root[data-theme="nexus"] .agent-kv,
+:root[data-theme="nexus-light"] .agent-kv {
+  border-radius: var(--radius-lg);
+}
+
+/* ── Command palette ── */
+:root[data-theme="nexus"] .command-palette__panel,
+:root[data-theme="nexus-light"] .command-palette__panel {
+  border-radius: var(--radius-lg);
+  box-shadow: none;
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+}
+
+/* ===== overrides ===== */
+
+/*
+ * Nexus theme sweep — remaining Control UI surfaces.
+ * Reference: ui/DESIGN.md
+ */
+
+/* ── Flat chrome: no decorative shadows ── */
+:root[data-theme="nexus"] :where(
+    .card,
+    .stat,
+    .stat-card,
+    .list-item,
+    .list-item-clickable,
+    .cron-form-modal,
+    .cron-filter-dropdown__panel,
+    .cqc-container,
+    .exec-approval-card,
+    .exec-approval-queue,
+    .session-details-panel,
+    .session-checkpoint-card,
+    .session-filter-panel,
+    .md-preview-dialog__panel,
+    .log-stream,
+    .callout,
+    .agent-kv,
+    .cron-workspace-form,
+    .debug-event-log__item,
+    .theme-orb__menu,
+    .cron-summary-strip,
+    .filters,
+    .sw-body-card,
+    .sw-empty-state__panel,
+    .sw-detail,
+    .ov-card,
+    .account-card,
+    .mcp-server-row,
+    .chat-queue,
+    .chat-side-result,
+    .chat-session-picker,
+    .chat-settings-popover,
+    .chat-controls__inline-select-menu,
+    .slash-menu,
+    .settings-appearance__section,
+    .settings-notifications__card,
+    .qs-card,
+    .sidebar-markdown-reader
+  ):not(.chat-message-image),
+:root[data-theme="nexus-light"] :where(
+    .card,
+    .stat,
+    .stat-card,
+    .list-item,
+    .list-item-clickable,
+    .cron-form-modal,
+    .cron-filter-dropdown__panel,
+    .cqc-container,
+    .exec-approval-card,
+    .exec-approval-queue,
+    .session-details-panel,
+    .session-checkpoint-card,
+    .session-filter-panel,
+    .md-preview-dialog__panel,
+    .log-stream,
+    .callout,
+    .agent-kv,
+    .cron-workspace-form,
+    .debug-event-log__item,
+    .theme-orb__menu,
+    .cron-summary-strip,
+    .filters,
+    .sw-body-card,
+    .sw-empty-state__panel,
+    .sw-detail,
+    .ov-card,
+    .account-card,
+    .mcp-server-row,
+    .chat-queue,
+    .chat-side-result,
+    .chat-session-picker,
+    .chat-settings-popover,
+    .chat-controls__inline-select-menu,
+    .slash-menu,
+    .settings-appearance__section,
+    .settings-notifications__card,
+    .qs-card,
+    .sidebar-markdown-reader
+  ):not(.chat-message-image) {
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] :where(.card:hover, .stat:hover, .list-item-clickable:hover),
+:root[data-theme="nexus-light"] :where(.card:hover, .stat:hover, .list-item-clickable:hover) {
+  box-shadow: none;
+}
+
+/* ── Global inputs (.input used outside .field) ── */
+:root[data-theme="nexus"] .input,
+:root[data-theme="nexus-light"] .input,
+:root[data-theme="nexus"] .filters .field input,
+:root[data-theme="nexus-light"] .filters .field input,
+:root[data-theme="nexus"] .filters .field select,
+:root[data-theme="nexus-light"] .filters .field select,
+:root[data-theme="nexus"] .session-filter-input,
+:root[data-theme="nexus-light"] .session-filter-input,
+:root[data-theme="nexus"] .cron-filter-search input,
+:root[data-theme="nexus-light"] .cron-filter-search input {
+  min-height: 44px;
+  border-radius: var(--radius-full);
+  font-size: 17px;
+  letter-spacing: -0.022em;
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .input:focus,
+:root[data-theme="nexus-light"] .input:focus,
+:root[data-theme="nexus"] .session-filter-input:focus,
+:root[data-theme="nexus-light"] .session-filter-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 20%, transparent);
+}
+
+/* ── Lists ── */
+:root[data-theme="nexus"] .list-item,
+:root[data-theme="nexus-light"] .list-item {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  padding: 14px 16px;
+  margin-bottom: 8px;
+}
+
+:root[data-theme="nexus"] .list-item-clickable:hover,
+:root[data-theme="nexus-light"] .list-item-clickable:hover {
+  border-color: var(--border-strong);
+  background: color-mix(in srgb, var(--primary) 6%, var(--card) 94%);
+}
+
+:root[data-theme="nexus"] .list-item-selected,
+:root[data-theme="nexus-light"] .list-item-selected {
+  border-color: color-mix(in srgb, var(--primary) 28%, transparent);
+  background: color-mix(in srgb, var(--primary) 10%, var(--card) 90%);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .list-title,
+:root[data-theme="nexus-light"] .list-title {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.022em;
+}
+
+:root[data-theme="nexus"] .list-sub,
+:root[data-theme="nexus-light"] .list-sub {
+  font-size: 14px;
+  line-height: 1.43;
+}
+
+/* ── Callouts — flat surfaces, no gradients ── */
+:root[data-theme="nexus"] .callout,
+:root[data-theme="nexus-light"] .callout {
+  border-radius: var(--radius-lg);
+  font-size: 14px;
+  line-height: 1.43;
+  padding: 16px 18px;
+  background: var(--card);
+}
+
+:root[data-theme="nexus"] .callout.danger,
+:root[data-theme="nexus-light"] .callout.danger {
+  background: color-mix(in srgb, var(--danger) 10%, var(--card) 90%);
+  border-color: color-mix(in srgb, var(--danger) 30%, var(--border) 70%);
+}
+
+:root[data-theme="nexus"] .callout.info,
+:root[data-theme="nexus-light"] .callout.info {
+  background: color-mix(in srgb, var(--primary) 8%, var(--card) 92%);
+  border-color: color-mix(in srgb, var(--primary) 24%, var(--border) 76%);
+  color: var(--accent);
+}
+
+:root[data-theme="nexus"] .callout.success,
+:root[data-theme="nexus-light"] .callout.success {
+  background: color-mix(in srgb, var(--ok) 8%, var(--card) 92%);
+  border-color: color-mix(in srgb, var(--ok) 24%, var(--border) 76%);
+}
+
+/* ── Agent / skills tabs — pill configurator chips ── */
+:root[data-theme="nexus"] .agent-tabs,
+:root[data-theme="nexus-light"] .agent-tabs {
+  border-bottom: none;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+:root[data-theme="nexus"] .agent-tab,
+:root[data-theme="nexus-light"] .agent-tab {
+  min-height: 44px;
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border);
+  font-size: 14px;
+  font-weight: 400;
+  background: var(--card);
+}
+
+:root[data-theme="nexus"] .agent-tab.active,
+:root[data-theme="nexus-light"] .agent-tab.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+:root[data-theme="nexus"] .agent-tab-count,
+:root[data-theme="nexus-light"] .agent-tab-count {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+/* ── Skill toggle ── */
+:root[data-theme="nexus"] .skill-toggle,
+:root[data-theme="nexus-light"] .skill-toggle {
+  border-radius: var(--radius-full);
+}
+
+:root[data-theme="nexus"] .skill-toggle:checked,
+:root[data-theme="nexus-light"] .skill-toggle:checked {
+  background: var(--primary);
+}
+
+/* ── Markdown preview dialog — store utility card ── */
+:root[data-theme="nexus"] .md-preview-dialog::backdrop,
+:root[data-theme="nexus-light"] .md-preview-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: saturate(180%) blur(20px);
+}
+
+:root[data-theme="nexus"] .md-preview-dialog__panel,
+:root[data-theme="nexus-light"] .md-preview-dialog__panel {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--card);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus-light"] .md-preview-dialog__panel {
+  background: #ffffff;
+  border-color: #e0e0e0;
+}
+
+:root[data-theme="nexus"] .md-preview-dialog__header,
+:root[data-theme="nexus-light"] .md-preview-dialog__header {
+  background: transparent;
+  padding: 24px 24px 16px;
+}
+
+:root[data-theme="nexus"] .md-preview-dialog__title,
+:root[data-theme="nexus-light"] .md-preview-dialog__title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+:root[data-theme="nexus"] .md-preview-dialog__eyebrow,
+:root[data-theme="nexus-light"] .md-preview-dialog__eyebrow {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+:root[data-theme="nexus"] .md-preview-icon-btn,
+:root[data-theme="nexus-light"] .md-preview-icon-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  border: none;
+  background: var(--nexus-chip-dark);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus-light"] .md-preview-icon-btn {
+  background: var(--nexus-chip);
+}
+
+:root[data-theme="nexus"] .md-preview-dialog__chip,
+:root[data-theme="nexus-light"] .md-preview-dialog__chip {
+  border-radius: var(--radius-full);
+  font-size: 14px;
+}
+
+/* ── Cron workspace ── */
+:root[data-theme="nexus"] .cron-form-modal,
+:root[data-theme="nexus-light"] .cron-form-modal {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .cron-form-section__title,
+:root[data-theme="nexus-light"] .cron-form-section__title {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.022em;
+}
+
+:root[data-theme="nexus"] .cron-empty-state__title,
+:root[data-theme="nexus-light"] .cron-empty-state__title {
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 600;
+}
+
+:root[data-theme="nexus"] .cron-filter-dropdown__trigger,
+:root[data-theme="nexus-light"] .cron-filter-dropdown__trigger {
+  min-height: 44px;
+  border-radius: var(--radius-full);
+}
+
+:root[data-theme="nexus"] .cron-filter-dropdown__panel,
+:root[data-theme="nexus-light"] .cron-filter-dropdown__panel {
+  border-radius: var(--radius-lg);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .cron-summary-strip,
+:root[data-theme="nexus-light"] .cron-summary-strip {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+}
+
+/* ── Cron quick create wizard ── */
+:root[data-theme="nexus"] .cqc-container,
+:root[data-theme="nexus-light"] .cqc-container {
+  border-radius: var(--radius-lg);
+  box-shadow: none;
+  padding: 32px;
+}
+
+:root[data-theme="nexus"] .cqc-backdrop,
+:root[data-theme="nexus-light"] .cqc-backdrop {
+  backdrop-filter: saturate(180%) blur(20px);
+}
+
+:root[data-theme="nexus"] .cqc-header__title,
+:root[data-theme="nexus-light"] .cqc-header__title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+:root[data-theme="nexus"] .cqc-header__close,
+:root[data-theme="nexus-light"] .cqc-header__close {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  border: none;
+  background: var(--nexus-chip-dark);
+}
+
+:root[data-theme="nexus-light"] .cqc-header__close {
+  background: var(--nexus-chip);
+}
+
+:root[data-theme="nexus"] .cqc-step--active .cqc-step__dot,
+:root[data-theme="nexus"] .cqc-step--done .cqc-step__dot,
+:root[data-theme="nexus-light"] .cqc-step--active .cqc-step__dot,
+:root[data-theme="nexus-light"] .cqc-step--done .cqc-step__dot {
+  background: var(--primary);
+}
+
+:root[data-theme="nexus"] .cqc-preset-card,
+:root[data-theme="nexus-light"] .cqc-preset-card,
+:root[data-theme="nexus"] .cqc-radio-card,
+:root[data-theme="nexus-light"] .cqc-radio-card {
+  border-radius: var(--radius-lg);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .cqc-preset-card--active,
+:root[data-theme="nexus-light"] .cqc-preset-card--active,
+:root[data-theme="nexus"] .cqc-radio-card--active,
+:root[data-theme="nexus-light"] .cqc-radio-card--active {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 20%, transparent);
+}
+
+:root[data-theme="nexus"] .cqc-textarea,
+:root[data-theme="nexus"] .cqc-input,
+:root[data-theme="nexus-light"] .cqc-textarea,
+:root[data-theme="nexus-light"] .cqc-input {
+  border-radius: var(--radius-md);
+  font-size: 17px;
+  min-height: 44px;
+}
+
+/* ── Sessions ── */
+:root[data-theme="nexus"] .session-status-badge,
+:root[data-theme="nexus-light"] .session-status-badge {
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+:root[data-theme="nexus"] .session-goal-chip,
+:root[data-theme="nexus-light"] .session-goal-chip {
+  border-radius: var(--radius-full);
+  font-size: 12px;
+}
+
+:root[data-theme="nexus"] .session-details-panel,
+:root[data-theme="nexus-light"] .session-details-panel {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--card);
+}
+
+:root[data-theme="nexus"] .session-details-panel__title,
+:root[data-theme="nexus-light"] .session-details-panel__title {
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 600;
+}
+
+:root[data-theme="nexus"] .session-checkpoint-card,
+:root[data-theme="nexus-light"] .session-checkpoint-card {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+}
+
+:root[data-theme="nexus"] .session-filter-check--active,
+:root[data-theme="nexus-light"] .session-filter-check--active {
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  border-color: color-mix(in srgb, var(--primary) 28%, transparent);
+  color: var(--accent);
+}
+
+/* ── Exec approval ── */
+:root[data-theme="nexus"] .exec-approval-card,
+:root[data-theme="nexus-light"] .exec-approval-card {
+  border-radius: var(--radius-lg);
+  padding: 24px;
+}
+
+:root[data-theme="nexus"] .exec-approval-title,
+:root[data-theme="nexus-light"] .exec-approval-title {
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 600;
+}
+
+:root[data-theme="nexus"] .exec-approval-command,
+:root[data-theme="nexus-light"] .exec-approval-command {
+  border-radius: var(--radius-md);
+  font-size: 14px;
+}
+
+/* ── Logs + debug ── */
+:root[data-theme="nexus"] .log-stream,
+:root[data-theme="nexus-light"] .log-stream {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  font-size: 14px;
+}
+
+:root[data-theme="nexus"] .debug-event-log__item,
+:root[data-theme="nexus-light"] .debug-event-log__item {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+}
+
+/* ── Agents overview ── */
+:root[data-theme="nexus"] .agents-overview-grid .card,
+:root[data-theme="nexus-light"] .agents-overview-grid .card {
+  min-height: 100px;
+}
+
+:root[data-theme="nexus"] .agent-kv > div:first-child,
+:root[data-theme="nexus-light"] .agent-kv > div:first-child {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.016em;
+}
+
+/* ── Status dots — flat, no glow shadows ── */
+:root[data-theme="nexus"] .statusDot,
+:root[data-theme="nexus-light"] .statusDot {
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .sidebar-version__dot,
+:root[data-theme="nexus"] .sidebar-version__status,
+:root[data-theme="nexus-light"] .sidebar-version__dot,
+:root[data-theme="nexus-light"] .sidebar-version__status {
+  box-shadow: none;
+}
+
+/* ── Chat copy/expand buttons — circular chips ── */
+:root[data-theme="nexus"] .chat-copy-btn,
+:root[data-theme="nexus"] .chat-expand-btn,
+:root[data-theme="nexus-light"] .chat-copy-btn,
+:root[data-theme="nexus-light"] .chat-expand-btn {
+  border-radius: var(--radius-full);
+  border: none;
+  background: var(--nexus-chip-dark);
+  min-width: 32px;
+  min-height: 32px;
+}
+
+:root[data-theme="nexus-light"] .chat-copy-btn,
+:root[data-theme="nexus-light"] .chat-expand-btn {
+  background: var(--nexus-chip);
+}
+
+:root[data-theme="nexus"] .chat-group.user .chat-bubble:hover,
+:root[data-theme="nexus-light"] .chat-group.user .chat-bubble:hover {
+  box-shadow: none;
+}
+
+:root[data-theme="nexus-light"] .chat-bubble:not(:where(.chat-bubble--tool-shell)):hover {
+  box-shadow: none;
+}
+
+/* ── Code blocks in chat ── */
+:root[data-theme="nexus"] .chat-text :where(pre),
+:root[data-theme="nexus-light"] .chat-text :where(pre),
+:root[data-theme="nexus"] .sidebar-markdown :where(pre),
+:root[data-theme="nexus-light"] .sidebar-markdown :where(pre) {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+}
+
+/* ── Onboarding shell ── */
+:root[data-theme="nexus"] .shell--onboarding .content,
+:root[data-theme="nexus-light"] .shell--onboarding .content {
+  background: var(--bg);
+}
+
+:root[data-theme="nexus-light"] .shell--onboarding .content {
+  background: var(--nexus-parchment);
+}
+
+/* ── Secondary buttons — ghost pill variant ── */
+:root[data-theme="nexus"] .btn:not(.primary):not(.danger):not(.btn--icon),
+:root[data-theme="nexus-light"] .btn:not(.primary):not(.danger):not(.btn--icon) {
+  border-radius: var(--radius-full);
+  min-height: 36px;
+}
+
+:root[data-theme="nexus"] .btn.btn--sm,
+:root[data-theme="nexus-light"] .btn.btn--sm {
+  min-height: 32px;
+  font-size: 14px;
+  border-radius: var(--radius-full);
+}
+
+/* ── Activity page ── */
+:root[data-theme="nexus"] .activity-status-filter,
+:root[data-theme="nexus-light"] .activity-status-filter,
+:root[data-theme="nexus"] .activity-autofollow,
+:root[data-theme="nexus-light"] .activity-autofollow {
+  border-radius: var(--radius-full);
+  min-height: 44px;
+}
+
+:root[data-theme="nexus"] .activity-entry,
+:root[data-theme="nexus-light"] .activity-entry {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+
+/* ── Usage page extras ── */
+:root[data-theme="nexus"] .usage-section-title,
+:root[data-theme="nexus-light"] .usage-section-title {
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: 0.011em;
+}
+
+/* ── Config extras ── */
+:root[data-theme="nexus"] .config-actions,
+:root[data-theme="nexus-light"] .config-actions {
+  backdrop-filter: saturate(180%) blur(20px);
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  border-top: 1px solid var(--border);
+}
+
+:root[data-theme="nexus"] .config-changes-badge,
+:root[data-theme="nexus-light"] .config-changes-badge {
+  border-radius: var(--radius-full);
+  font-size: 12px;
+}
+
+/* ── Remove gradient backgrounds on claw theme ── */
+:root[data-theme="nexus"] :where(
+    .md-preview-dialog__header,
+    .md-preview-icon-btn,
+    .session-details-panel__hero,
+    .nav-item.active,
+    .nav-item--active
+  ),
+:root[data-theme="nexus-light"] :where(
+    .md-preview-dialog__header,
+    .md-preview-icon-btn,
+    .session-details-panel__hero,
+    .nav-item.active,
+    .nav-item--active
+  ) {
+  background-image: none;
+}
+
+/* ── Markdown preview theme (create-markdown) ── */
+:root[data-theme="nexus"] .cm-preview,
+:root[data-theme="nexus-light"] .cm-preview {
+  --cm-link: var(--primary);
+  font-size: 17px;
+  line-height: 1.47;
+}
+
+/* ===== skill-workshop ===== */
+
+/*
+ * Nexus theme — Skill Workshop (.sw-*)
+ * Reference: ui/DESIGN.md — configurator chips, utility cards
+ */
+
+:root[data-theme="nexus"] .sw-lifecycle-tabs,
+:root[data-theme="nexus-light"] .sw-lifecycle-tabs {
+  border-bottom-color: var(--border);
+  gap: 8px;
+  padding-bottom: 8px;
+}
+
+:root[data-theme="nexus"] .sw-lifecycle-tab,
+:root[data-theme="nexus-light"] .sw-lifecycle-tab {
+  min-height: 44px;
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  border: 1px solid transparent;
+  font-size: 14px;
+  font-weight: 400;
+  margin-bottom: 0;
+  border-bottom: none;
+}
+
+:root[data-theme="nexus"] .sw-lifecycle-tab.is-active,
+:root[data-theme="nexus-light"] .sw-lifecycle-tab.is-active {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--primary);
+}
+
+:root[data-theme="nexus"] .sw-lifecycle-tab__count,
+:root[data-theme="nexus-light"] .sw-lifecycle-tab__count {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+:root[data-theme="nexus"] .sw-triage,
+:root[data-theme="nexus-light"] .sw-triage {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--card);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus-light"] .sw-triage {
+  background: #ffffff;
+  border-color: #e0e0e0;
+}
+
+:root[data-theme="nexus"] .sw-queue__search input,
+:root[data-theme="nexus-light"] .sw-queue__search input {
+  min-height: 44px;
+  border-radius: var(--radius-full);
+  font-size: 17px;
+}
+
+:root[data-theme="nexus"] .sw-row,
+:root[data-theme="nexus-light"] .sw-row {
+  min-height: 44px;
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+}
+
+:root[data-theme="nexus"] .sw-row.is-selected,
+:root[data-theme="nexus-light"] .sw-row.is-selected {
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
+  border-color: color-mix(in srgb, var(--primary) 22%, transparent);
+}
+
+:root[data-theme="nexus"] .sw-row__title,
+:root[data-theme="nexus-light"] .sw-row__title {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.016em;
+}
+
+:root[data-theme="nexus"] .sw-queue__group-pill,
+:root[data-theme="nexus-light"] .sw-queue__group-pill {
+  border-radius: var(--radius-full);
+  font-size: 12px;
+}
+
+:root[data-theme="nexus"] .sw-detail,
+:root[data-theme="nexus-light"] .sw-detail {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .sw-detail__title,
+:root[data-theme="nexus-light"] .sw-detail__title {
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: 0.011em;
+}
+
+:root[data-theme="nexus"] .sw-body-card,
+:root[data-theme="nexus-light"] .sw-body-card {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--card);
+  box-shadow: none;
+  padding: 24px;
+}
+
+:root[data-theme="nexus"] .sw-body-card h1,
+:root[data-theme="nexus-light"] .sw-body-card h1 {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+:root[data-theme="nexus"] .sw-body-card h3,
+:root[data-theme="nexus-light"] .sw-body-card h3 {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+}
+
+:root[data-theme="nexus"] .sw-empty-state__panel,
+:root[data-theme="nexus-light"] .sw-empty-state__panel {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .sw-empty-state h2,
+:root[data-theme="nexus-light"] .sw-empty-state h2 {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 600;
+}
+
+:root[data-theme="nexus"] .sw-error,
+:root[data-theme="nexus-light"] .sw-error {
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--danger) 8%, var(--card) 92%);
+}
+
+:root[data-theme="nexus"] .sw-detail__nav button,
+:root[data-theme="nexus-light"] .sw-detail__nav button {
+  min-height: 44px;
+  border-radius: var(--radius-full);
+  font-size: 14px;
+}
+
+:root[data-theme="nexus"] .content--skill-workshop,
+:root[data-theme="nexus-light"] .content--skill-workshop {
+  background: var(--bg);
+}
+
+:root[data-theme="nexus-light"] .content--skill-workshop,
+:root[data-theme="nexus-light"] .content--skill-workshop-today {
+  background: var(--nexus-parchment);
+}
+
+/* ===== sweep ===== */
+
+/*
+ * Final Nexus sweep — neutralize shadows/gradients from feature CSS loaded before nexus.
+ * Runs last in the nexus bundle; styles.css loads nexus.css after all feature sheets.
+ */
+
+/* ── Buttons: no glow shadows ── */
+:root[data-theme="nexus"] .btn,
+:root[data-theme="nexus-light"] .btn {
+  font-weight: 400;
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .btn:hover,
+:root[data-theme="nexus-light"] .btn:hover {
+  box-shadow: none;
+}
+
+/* ── Chat tool summaries + cards ── */
+:root[data-theme="nexus"] .chat-tool-msg-summary,
+:root[data-theme="nexus-light"] .chat-tool-msg-summary {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--card);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .chat-tool-msg-summary[type="button"],
+:root[data-theme="nexus-light"] .chat-tool-msg-summary[type="button"],
+:root[data-theme="nexus"] .chat-tool-msg-summary.chat-tool-msg-summary--error,
+:root[data-theme="nexus-light"] .chat-tool-msg-summary.chat-tool-msg-summary--error {
+  background: var(--card);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .chat-tool-msg-summary.chat-tool-msg-summary--error,
+:root[data-theme="nexus-light"] .chat-tool-msg-summary.chat-tool-msg-summary--error {
+  background: color-mix(in srgb, var(--danger) 8%, var(--card) 92%);
+}
+
+:root[data-theme="nexus"] .chat-tool-card,
+:root[data-theme="nexus-light"] .chat-tool-card,
+:root[data-theme="nexus"] .chat-bubble--tool-shell,
+:root[data-theme="nexus-light"] .chat-bubble--tool-shell {
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .chat-delete-confirm,
+:root[data-theme="nexus-light"] .chat-delete-confirm {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--card);
+  box-shadow: none;
+}
+
+/* ── Chat popovers / menus ── */
+:root[data-theme="nexus"] .chat-session-picker,
+:root[data-theme="nexus-light"] .chat-session-picker,
+:root[data-theme="nexus"] .chat-controls__inline-select-menu,
+:root[data-theme="nexus-light"] .chat-controls__inline-select-menu,
+:root[data-theme="nexus"] .chat-settings-popover,
+:root[data-theme="nexus-light"] .chat-settings-popover,
+:root[data-theme="nexus"] .slash-menu,
+:root[data-theme="nexus-light"] .slash-menu,
+:root[data-theme="nexus"] .agent-chat__talk-select-menu,
+:root[data-theme="nexus-light"] .agent-chat__talk-select-menu {
+  box-shadow: none;
+}
+
+/* ── Config surfaces ── */
+:root[data-theme="nexus"] .config-section-card,
+:root[data-theme="nexus-light"] .config-section-card {
+  border-radius: var(--radius-lg);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .config-section-card:hover,
+:root[data-theme="nexus-light"] .config-section-card:hover {
+  box-shadow: none;
+  border-color: var(--border-strong);
+}
+
+:root[data-theme="nexus"] .settings-theme-card,
+:root[data-theme="nexus-light"] .settings-theme-card {
+  box-shadow: none;
+  transform: none;
+}
+
+:root[data-theme="nexus"] .settings-theme-card:hover,
+:root[data-theme="nexus-light"] .settings-theme-card:hover,
+:root[data-theme="nexus"] .settings-theme-card--selected,
+:root[data-theme="nexus-light"] .settings-theme-card--selected {
+  box-shadow: none;
+  transform: none;
+}
+
+:root[data-theme="nexus"] .settings-notifications__card,
+:root[data-theme="nexus-light"] .settings-notifications__card {
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .cfg-input,
+:root[data-theme="nexus"] .cfg-select,
+:root[data-theme="nexus"] .cfg-textarea,
+:root[data-theme="nexus-light"] .cfg-input,
+:root[data-theme="nexus-light"] .cfg-select,
+:root[data-theme="nexus-light"] .cfg-textarea {
+  box-shadow: none;
+  border-radius: var(--radius-md);
+  min-height: var(--nexus-touch-target);
+  font-size: var(--nexus-type-body-size);
+}
+
+:root[data-theme="nexus"] .cfg-segmented,
+:root[data-theme="nexus-light"] .cfg-segmented {
+  box-shadow: none;
+}
+
+/* ── Usage / activity / workboard ── */
+:root[data-theme="nexus"] .usage-page .card,
+:root[data-theme="nexus-light"] .usage-page .card,
+:root[data-theme="nexus"] .usage-overview-card,
+:root[data-theme="nexus-light"] .usage-overview-card,
+:root[data-theme="nexus"] .usage-left-card,
+:root[data-theme="nexus-light"] .usage-left-card,
+:root[data-theme="nexus"] .usage-loading-card,
+:root[data-theme="nexus-light"] .usage-loading-card,
+:root[data-theme="nexus"] .usage-insight-card,
+:root[data-theme="nexus-light"] .usage-insight-card,
+:root[data-theme="nexus"] .session-detail-panel,
+:root[data-theme="nexus-light"] .session-detail-panel,
+:root[data-theme="nexus"] .activity-entry,
+:root[data-theme="nexus-light"] .activity-entry,
+:root[data-theme="nexus"] .workboard-card,
+:root[data-theme="nexus-light"] .workboard-card,
+:root[data-theme="nexus"] .workboard-column,
+:root[data-theme="nexus-light"] .workboard-column {
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .usage-header.pinned,
+:root[data-theme="nexus-light"] .usage-header.pinned {
+  box-shadow: none;
+  backdrop-filter: var(--nexus-frosted-blur);
+  -webkit-backdrop-filter: var(--nexus-frosted-blur);
+}
+
+/* ── Dreams — flat decorative chrome ── */
+:root[data-theme="nexus"] .dreams__lobster,
+:root[data-theme="nexus-light"] .dreams__lobster {
+  filter: none;
+}
+
+:root[data-theme="nexus"] .dreams__moon,
+:root[data-theme="nexus-light"] .dreams__moon {
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .dreams-diary__insight-card,
+:root[data-theme="nexus-light"] .dreams-diary__insight-card,
+:root[data-theme="nexus"] .dreams-diary__chrome,
+:root[data-theme="nexus-light"] .dreams-diary__chrome {
+  box-shadow: none;
+  border-radius: var(--radius-lg);
+}
+
+/* ── Skill workshop remnants ── */
+:root[data-theme="nexus"] .sw-body-card,
+:root[data-theme="nexus-light"] .sw-body-card,
+:root[data-theme="nexus"] .sw-detail,
+:root[data-theme="nexus-light"] .sw-detail,
+:root[data-theme="nexus"] .sw-empty-state__panel,
+:root[data-theme="nexus-light"] .sw-empty-state__panel,
+:root[data-theme="nexus"] .sw-modal,
+:root[data-theme="nexus-light"] .sw-modal,
+:root[data-theme="nexus"] .sw-progress__bar,
+:root[data-theme="nexus-light"] .sw-progress__bar {
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .sw-progress__bar-fill,
+:root[data-theme="nexus-light"] .sw-progress__bar-fill {
+  background: var(--primary);
+  box-shadow: none;
+}
+
+/* ── Markdown preview dialog ── */
+:root[data-theme="nexus"] .md-preview-dialog::backdrop,
+:root[data-theme="nexus-light"] .md-preview-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: var(--nexus-frosted-blur);
+  -webkit-backdrop-filter: var(--nexus-frosted-blur);
+}
+
+:root[data-theme="nexus"] .md-preview-dialog__panel,
+:root[data-theme="nexus-light"] .md-preview-dialog__panel {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--card);
+  box-shadow: none;
+}
+
+:root[data-theme="nexus"] .md-preview-dialog__header,
+:root[data-theme="nexus-light"] .md-preview-dialog__header {
+  background: transparent;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ── Callouts — flat fills, no gradient wash ── */
+:root[data-theme="nexus"] .callout.danger,
+:root[data-theme="nexus-light"] .callout.danger {
+  background: color-mix(in srgb, var(--danger) 10%, var(--card) 90%);
+}
+
+:root[data-theme="nexus"] .callout.info,
+:root[data-theme="nexus-light"] .callout.info {
+  background: color-mix(in srgb, var(--primary) 8%, var(--card) 92%);
+  color: var(--accent);
+}
+
+:root[data-theme="nexus"] .callout.success,
+:root[data-theme="nexus-light"] .callout.success {
+  background: color-mix(in srgb, var(--ok) 8%, var(--card) 92%);
+}
+
+/* ── Toggles ── */
+:root[data-theme="nexus"] .skill-toggle::after,
+:root[data-theme="nexus-light"] .skill-toggle::after {
+  box-shadow: none;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* ── Status dots — no glow halos ── */
+:root[data-theme="nexus"] .status-dot--ok,
+:root[data-theme="nexus-light"] .status-dot--ok,
+:root[data-theme="nexus"] .status-dot--warn,
+:root[data-theme="nexus-light"] .status-dot--warn,
+:root[data-theme="nexus"] .status-dot--danger,
+:root[data-theme="nexus-light"] .status-dot--danger {
+  box-shadow: none;
+}
+
+/* ── Product imagery — the one allowed shadow ── */
+:root[data-theme="nexus"] .chat-message-image,
+:root[data-theme="nexus-light"] .chat-message-image,
+:root[data-theme="nexus"] openclaw-app img.product-render,
+:root[data-theme="nexus-light"] openclaw-app img.product-render {
+  box-shadow: var(--product-shadow);
+}

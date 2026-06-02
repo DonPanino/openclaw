@@ -10,7 +10,7 @@ title: "Linux app"
 The Gateway is fully supported on Linux. **Node is the recommended runtime**.
 Bun is not recommended for the Gateway (WhatsApp/Telegram bugs).
 
-Native Linux companion apps are planned. Contributions are welcome if you want to help build one.
+A **native Linux companion app** (tray, Control UI, WebChat, node capabilities) is in development under `apps/linux/`. See [Linux app dev setup](/platforms/linux/dev-setup) to build from source. Feature parity vs macOS is tracked in `apps/linux/PARITY.md`.
 
 ## Beginner quick path (VPS)
 
@@ -133,6 +133,12 @@ its normal score, usually `0`.
 This does not replace normal memory tuning. If a VPS or container repeatedly
 kills children, increase the memory limit, reduce concurrency, or add stronger
 resource controls such as systemd `MemoryMax=` or container-level memory limits.
+
+## Desktop companion
+
+- [Linux app dev setup](/platforms/linux/dev-setup)
+- Build: `pnpm linux:build` from repo root (requires Rust + WebKitGTK)
+- Run: `openclaw-app` or `pnpm linux:dev`
 
 ## Related
 

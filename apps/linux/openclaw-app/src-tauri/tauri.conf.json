@@ -1,0 +1,51 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "OpenClaw",
+  "version": "2026.6.2",
+  "identifier": "ai.openclaw.linux",
+  "build": {
+    "frontendDist": "../ui/dist",
+    "beforeBuildCommand": "pnpm --dir ../ui build"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "OpenClaw Settings",
+        "width": 1000,
+        "height": 760,
+        "visible": false,
+        "center": true
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self' ipc: http://ipc.localhost http://127.0.0.1:* http://localhost:* file: asset:; script-src 'self' 'unsafe-inline' http://127.0.0.1:* http://localhost:* file: asset:; connect-src 'self' ws: wss: http://127.0.0.1:* http://localhost:* https://127.0.0.1:* https://localhost:* file:; img-src 'self' data: blob: http://127.0.0.1:* http://localhost:* file:; style-src 'self' 'unsafe-inline' http://127.0.0.1:* http://localhost:* file: asset:"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["deb", "appimage"],
+    "icon": ["icons/icon.png"],
+    "linux": {
+      "deb": {
+        "depends": [
+          "openclaw",
+          "webkit2gtk-4.1",
+          "libayatana-appindicator3-1",
+          "libnotify",
+          "xdg-desktop-portal"
+        ]
+      }
+    }
+  },
+  "plugins": {
+    "shell": {
+      "open": true
+    },
+    "deep-link": {
+      "desktop": {
+        "schemes": ["openclaw"]
+      }
+    }
+  }
+}

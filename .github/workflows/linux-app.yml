@@ -1,0 +1,30 @@
+name: Linux companion app
+
+on:
+  pull_request:
+    paths:
+      - "apps/linux/**"
+      - "packages/gateway-protocol/src/client-info.ts"
+      - "src/gateway/node-command-policy.ts"
+      - "extensions/canvas/index.ts"
+      - ".github/workflows/linux-app.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "apps/linux/**"
+
+jobs:
+  rust-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install UI deps
+        run: |
+          cd apps/linux/openclaw-app/ui
+          npm install
+      - name: Cargo test
+        run: cargo test --manifest-path apps/linux/Cargo.toml
+      - name: Cargo build (app crate)
+        run: cargo build --manifest-path apps/linux/Cargo.toml -p openclaw-linux-app-tauri

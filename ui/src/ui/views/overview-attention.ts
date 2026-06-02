@@ -6,6 +6,8 @@ import type { AttentionItem } from "../types.ts";
 
 export type OverviewAttentionProps = {
   items: AttentionItem[];
+  open: boolean;
+  onToggle: (open: boolean) => void;
 };
 
 function severityClass(severity: string) {
@@ -31,30 +33,47 @@ export function renderOverviewAttention(props: OverviewAttentionProps) {
   }
 
   return html`
-    <section class="card ov-attention">
-      <div class="card-title">${t("overview.attention.title")}</div>
-      <div class="ov-attention-list">
-        ${props.items.map(
-          (item) => html`
-            <div class="ov-attention-item ${severityClass(item.severity)}">
-              <span class="ov-attention-icon">${attentionIcon(item.icon)}</span>
-              <div class="ov-attention-body">
-                <div class="ov-attention-title">${item.title}</div>
-                <div class="muted">${item.description}</div>
+    <details
+      class="card ov-section ov-attention"
+      ?open=${props.open}
+      @toggle=${(e: Event) => {
+        const target = e.target as HTMLDetailsElement;
+        if (target !== e.currentTarget) {
+          return;
+        }
+        props.onToggle(target.open);
+      }}
+    >
+      <summary class="ov-expandable-toggle ov-section__summary">
+        <span class="ov-section__titles">
+          <span class="ov-section__title">${t("overview.attention.title")}</span>
+          <span class="ov-section__sub">${props.items.length}</span>
+        </span>
+      </summary>
+      <div class="ov-section__body ov-section__body--compact">
+        <div class="ov-attention-list">
+          ${props.items.map(
+            (item) => html`
+              <div class="ov-attention-item ${severityClass(item.severity)}">
+                <span class="ov-attention-icon">${attentionIcon(item.icon)}</span>
+                <div class="ov-attention-body">
+                  <div class="ov-attention-title">${item.title}</div>
+                  <div class="muted">${item.description}</div>
+                </div>
+                ${item.href
+                  ? html`<a
+                      class="ov-attention-link"
+                      href=${item.href}
+                      target=${item.external ? EXTERNAL_LINK_TARGET : nothing}
+                      rel=${item.external ? buildExternalLinkRel() : nothing}
+                      >${t("common.docs")}</a
+                    >`
+                  : nothing}
               </div>
-              ${item.href
-                ? html`<a
-                    class="ov-attention-link"
-                    href=${item.href}
-                    target=${item.external ? EXTERNAL_LINK_TARGET : nothing}
-                    rel=${item.external ? buildExternalLinkRel() : nothing}
-                    >${t("common.docs")}</a
-                  >`
-                : nothing}
-            </div>
-          `,
-        )}
+            `,
+          )}
+        </div>
       </div>
-    </section>
+    </details>
   `;
 }

@@ -1,8 +1,10 @@
-export type ThemeName = "claw" | "knot" | "dash" | "custom";
+export type ThemeName = "claw" | "nexus" | "knot" | "dash" | "custom";
 export type ThemeMode = "system" | "light" | "dark";
 export type ResolvedTheme =
   | "dark"
   | "light"
+  | "nexus"
+  | "nexus-light"
   | "openknot"
   | "openknot-light"
   | "dash"
@@ -10,7 +12,7 @@ export type ResolvedTheme =
   | "custom"
   | "custom-light";
 
-export const VALID_THEME_NAMES = new Set<ThemeName>(["claw", "knot", "dash", "custom"]);
+export const VALID_THEME_NAMES = new Set<ThemeName>(["claw", "nexus", "knot", "dash", "custom"]);
 const VALID_THEME_MODES = new Set<ThemeMode>(["system", "light", "dark"]);
 
 type ThemeSelection = { theme: ThemeName; mode: ThemeMode };
@@ -68,6 +70,9 @@ export function resolveTheme(theme: ThemeName, mode: ThemeMode): ResolvedTheme {
   const resolvedMode = resolveMode(mode);
   if (theme === "claw") {
     return resolvedMode === "light" ? "light" : "dark";
+  }
+  if (theme === "nexus") {
+    return resolvedMode === "light" ? "nexus-light" : "nexus";
   }
   if (theme === "knot") {
     return resolvedMode === "light" ? "openknot-light" : "openknot";

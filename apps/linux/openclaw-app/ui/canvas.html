@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>OpenClaw Canvas</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Canvas</h1>
+      <p class="subtitle">A2UI surface — bundle via pnpm canvas:a2ui:bundle</p>
+    </header>
+    <main id="root"></main>
+    <script type="module">
+      const params = new URLSearchParams(location.search);
+      document.getElementById("root").textContent =
+        `Session: ${params.get("session") ?? "default"}`;
+    </script>
+  </body>
+</html>

@@ -17,6 +17,8 @@ function stripAnsi(text: string): string {
 export type OverviewLogTailProps = {
   lines: string[];
   onRefreshLogs: () => void;
+  open: boolean;
+  onToggle: (open: boolean) => void;
 };
 
 export function renderOverviewLogTail(props: OverviewLogTailProps) {
@@ -30,7 +32,17 @@ export function renderOverviewLogTail(props: OverviewLogTailProps) {
     .join("\n");
 
   return html`
-    <details class="card ov-log-tail" open>
+    <details
+      class="card ov-log-tail ov-section"
+      ?open=${props.open}
+      @toggle=${(e: Event) => {
+        const target = e.target as HTMLDetailsElement;
+        if (target !== e.currentTarget) {
+          return;
+        }
+        props.onToggle(target.open);
+      }}
+    >
       <summary class="ov-expandable-toggle">
         <span class="nav-item__icon">${icons.scrollText}</span>
         ${t("overview.logTail.title")}

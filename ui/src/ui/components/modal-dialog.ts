@@ -30,9 +30,9 @@ export class OpenClawModalDialog extends LitElement {
       display: block;
       padding: 24px;
       box-sizing: border-box;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
     }
 
     dialog {
