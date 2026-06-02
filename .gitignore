@@ -28,6 +28,9 @@ packages/dashboard-next/out/
 # Mise configuration files
 mise.toml
 
+# Linux companion app (Rust/Cargo)
+apps/linux/target/
+
 # Android build artifacts
 apps/android/.gradle/
 apps/android/app/build/
