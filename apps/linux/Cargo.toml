@@ -6,6 +6,7 @@ members = [
   "crates/node-host",
   "crates/capture",
   "crates/voice",
+  "crates/bridge",
   "openclaw-app/src-tauri",
 ]
 
@@ -29,6 +30,7 @@ url = "2"
 sha2 = "0.10"
 hmac = "0.12"
 hex = "0.4"
+base64 = "0.22"
 dirs = "6"
 notify-rust = "4"
 mdns-sd = "0.13"

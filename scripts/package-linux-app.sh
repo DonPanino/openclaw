@@ -38,6 +38,10 @@ if [[ -d "$A2UI_SRC" ]]; then
   cp -a "$A2UI_SRC" "$A2UI_DST"
 fi
 
+if [[ -x "$ROOT_DIR/scripts/linux-app-icons.sh" ]]; then
+  "$ROOT_DIR/scripts/linux-app-icons.sh" || true
+fi
+
 export OPENCLAW_REPO_ROOT="$ROOT_DIR"
 cd apps/linux
 cargo build --release -p openclaw-linux-app-tauri

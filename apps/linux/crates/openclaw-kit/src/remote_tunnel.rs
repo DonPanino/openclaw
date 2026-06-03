@@ -1,6 +1,11 @@
 use std::process::Stdio;
 use tokio::process::{Child, Command};
 
+/// `ssh -L` forward spec: `local:127.0.0.1:remote` (macOS RemotePortTunnel parity).
+pub fn ssh_local_forward_spec(local_port: u16, remote_port: u16) -> String {
+    format!("{local_port}:127.0.0.1:{remote_port}")
+}
+
 /// `ssh -N -L` port forward for remote gateway mode (macOS RemotePortTunnel parity).
 pub struct RemoteTunnel {
     child: Child,
@@ -19,7 +24,7 @@ impl RemoteTunnel {
             return Err("gateway.remote.sshTarget is empty".into());
         }
 
-        let forward = format!("{local_port}:127.0.0.1:{remote_port}");
+        let forward = ssh_local_forward_spec(local_port, remote_port);
         let mut cmd = Command::new("ssh");
         cmd.args([
             "-o",
@@ -52,9 +57,28 @@ impl RemoteTunnel {
         Ok(Self { child, local_port })
     }
 
+    /// Returns false when the ssh child has exited.
+    pub async fn is_alive(&mut self) -> bool {
+        match self.child.try_wait() {
+            Ok(None) => true,
+            Ok(Some(_)) | Err(_) => false,
+        }
+    }
+
     pub async fn stop(mut self) {
         let _ = self.child.kill().await;
         let _ = self.child.wait().await;
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::ssh_local_forward_spec;
+
+    #[test]
+    fn forward_spec_matches_ssh_local_bind() {
+        assert_eq!(ssh_local_forward_spec(18789, 18789), "18789:127.0.0.1:18789");
+        assert_eq!(ssh_local_forward_spec(19000, 18789), "19000:127.0.0.1:18789");
     }
 }
 

@@ -16,6 +16,7 @@ openclaw-kit = { path = "../../crates/openclaw-kit" }
 openclaw-node-host = { path = "../../crates/node-host" }
 openclaw-capture = { path = "../../crates/capture" }
 openclaw-voice = { path = "../../crates/voice" }
+openclaw-bridge = { path = "../../crates/bridge" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 tokio = { version = "1", features = ["macros", "rt-multi-thread", "sync", "time", "process", "fs"] }

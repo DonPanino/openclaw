@@ -2574,9 +2574,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "openclaw-bridge"
+version = "2026.6.2"
+dependencies = [
+ "dirs",
+ "serde",
+]
+
+[[package]]
 name = "openclaw-capture"
 version = "0.0.0"
 dependencies = [
+ "base64 0.22.1",
  "futures-util",
  "serde",
  "serde_json",
@@ -2602,6 +2611,7 @@ dependencies = [
  "serde",
  "serde_json",
  "sha2",
+ "tempfile",
  "thiserror 2.0.18",
  "tokio",
  "url",
@@ -2612,6 +2622,7 @@ name = "openclaw-linux-app-tauri"
 version = "2026.6.2"
 dependencies = [
  "notify-rust",
+ "openclaw-bridge",
  "openclaw-capture",
  "openclaw-kit",
  "openclaw-node-host",
@@ -2669,12 +2680,14 @@ dependencies = [
 name = "openclaw-voice"
 version = "0.0.0"
 dependencies = [
+ "base64 0.22.1",
  "dirs",
  "serde",
  "serde_json",
  "thiserror 2.0.18",
  "tokio",
  "tracing",
+ "uuid",
 ]
 
 [[package]]

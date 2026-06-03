@@ -15,7 +15,7 @@ impl GatewayCli {
     }
 
     fn openclaw_bin() -> String {
-        std::env::var("OPENCLAW_BIN").unwrap_or_else(|_| "openclaw".into())
+        openclaw_kit::resolve_openclaw_bin()
     }
 
     pub async fn gateway_status_json(&self) -> Result<String, String> {

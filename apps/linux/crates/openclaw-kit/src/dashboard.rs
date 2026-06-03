@@ -101,6 +101,11 @@ pub fn dashboard_url_with_token_fragment(mut url: Url, token: Option<&str>) -> U
 
 /// Control UI chat tab (`/chat` under the configured base path).
 pub fn control_ui_chat_url(auth: &DashboardAuth) -> Url {
+    control_ui_chat_url_with_session(auth, None)
+}
+
+/// Control UI chat with optional `session` query (WebChat deep links).
+pub fn control_ui_chat_url_with_session(auth: &DashboardAuth, session: Option<&str>) -> Url {
     let mut url = auth.http_url.clone();
     let path = url.path().trim_end_matches('/');
     let chat_path = if path.is_empty() || path == "/" {
@@ -109,6 +114,9 @@ pub fn control_ui_chat_url(auth: &DashboardAuth) -> Url {
         format!("{path}/chat")
     };
     url.set_path(&chat_path);
+    if let Some(session) = session.filter(|s| !s.trim().is_empty()) {
+        url.query_pairs_mut().append_pair("session", session.trim());
+    }
     dashboard_url_with_token_fragment(url, auth.token.as_deref())
 }
 
@@ -128,6 +136,15 @@ pub fn native_control_auth_init_script(auth: &DashboardAuth) -> String {
 mod tests {
     use super::*;
     use crate::gateway_config::GatewayConnectionSettings;
+
+    #[test]
+    fn chat_url_includes_session_query() {
+        let settings = GatewayConnectionSettings::default();
+        let gateway = OpenClawGatewayConfig::default();
+        let auth = resolve_dashboard_auth(&settings, &gateway).unwrap();
+        let url = control_ui_chat_url_with_session(&auth, Some("agent:main:main"));
+        assert!(url.as_str().contains("session="));
+    }
 
     #[test]
     fn local_dashboard_uses_control_ui_base_path() {

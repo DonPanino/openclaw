@@ -11,6 +11,14 @@ CONTROL_UI_INDEX="$ROOT_DIR/dist/control-ui/index.html"
 
 echo "linux-dev: OPENCLAW_REPO_ROOT=$OPENCLAW_REPO_ROOT"
 
+MAC_ICON="$ROOT_DIR/apps/macos/Icon.icon/Assets/openclaw-mac.png"
+LINUX_ICON="$ROOT_DIR/apps/linux/openclaw-app/src-tauri/icons/icon.png"
+if [[ -f "$MAC_ICON" ]] && [[ -x "$ROOT_DIR/scripts/linux-app-icons.sh" ]]; then
+  if [[ ! -f "$LINUX_ICON" ]] || [[ "$MAC_ICON" -nt "$LINUX_ICON" ]]; then
+    "$ROOT_DIR/scripts/linux-app-icons.sh" || true
+  fi
+fi
+
 pnpm --dir "$LINUX_APP_UI" install
 pnpm --dir "$LINUX_APP_UI" build
 

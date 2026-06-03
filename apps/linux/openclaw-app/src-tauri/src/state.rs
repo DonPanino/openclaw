@@ -58,6 +58,11 @@ impl AppState {
         *self.node.lock().await = Some(handle);
     }
 
+    /// Drop the node handle without sending shutdown (WS loop already exited).
+    pub async fn clear_node_runtime_slot(&self) {
+        self.node.lock().await.take();
+    }
+
     pub async fn set_operator(&self, gateway: Arc<OperatorGateway>) {
         *self.operator.lock().await = Some(gateway);
     }
@@ -79,6 +84,19 @@ impl AppState {
         if let Some(tunnel) = guard.take() {
             tunnel.stop().await;
         }
+    }
+
+    pub async fn remote_tunnel_is_alive(&self) -> bool {
+        let mut guard = self.remote_tunnel.lock().await;
+        if let Some(tunnel) = guard.as_mut() {
+            tunnel.is_alive().await
+        } else {
+            false
+        }
+    }
+
+    pub async fn has_remote_tunnel(&self) -> bool {
+        self.remote_tunnel.lock().await.is_some()
     }
 
     pub async fn clear_operator(&self) {

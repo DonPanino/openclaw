@@ -1,4 +1,5 @@
 mod canvas;
+mod desktop_integration;
 mod exec_broker;
 mod gateway_cli;
 mod gateway_runtime;
@@ -33,6 +34,7 @@ pub fn run() {
         .manage(AppState::default())
         .manage(voice::VoiceService::new())
         .setup(|app| {
+            desktop_integration::ensure_desktop_integration();
             setup_tray(app.handle())?;
             let exec_broker = Arc::new(exec_broker::ExecApprovalBroker::new(app.handle().clone()));
             app.manage(exec_broker.clone());
@@ -60,7 +62,7 @@ pub fn run() {
             start_tray_status_poll(app.handle().clone());
             register_deep_links(app.handle());
             // Open dashboard on the GTK main thread (Wayland-safe); settings if URL/auth fails.
-            if let Err(err) = show_dashboard_window(app.handle()) {
+            if let Err(err) = show_dashboard_window(app.handle(), None) {
                 tracing::error!("failed to show dashboard on launch: {err}");
                 emit_connection_error(app.handle(), err.clone());
                 if let Err(fallback) = show_settings_window(app.handle()) {
@@ -71,8 +73,10 @@ pub fn run() {
         })
         .invoke_handler(tauri::generate_handler![
             get_gateway_status,
+            get_gateway_version_info,
             install_gateway_service,
             open_dashboard,
+            open_dashboard_chat,
             open_webchat,
             open_settings,
             save_connection_settings,
@@ -82,13 +86,23 @@ pub fn run() {
             get_exec_approvals,
             save_exec_approvals,
             install_cli,
+            cli_installed_location,
             open_canvas_window,
             open_test_canvas,
             operator_health,
             operator_channels_status,
             operator_skills_status,
             operator_cron_list,
+            operator_cron_status,
+            operator_cron_run,
+            get_device_identity,
+            get_connection_health,
+            get_app_build_info,
+            operator_channel_start,
+            operator_channel_stop,
             operator_sessions_list,
+            operator_sessions_preview,
+            operator_sessions_describe,
             operator_config_get,
             operator_connect,
             install_node_service,
@@ -100,9 +114,11 @@ pub fn run() {
             pairing_reject_node,
             operator_instances,
             resolve_exec_approval,
+            get_pending_exec_approvals,
             start_remote_tunnel,
             stop_remote_tunnel,
             get_connection_status,
+            get_remote_tunnel_active,
             get_voice_settings,
             save_voice_settings,
             set_gateway_autostart,
@@ -113,6 +129,11 @@ pub fn run() {
             stop_gateway_service_cmd,
             voice_ptt_start,
             voice_ptt_stop,
+            voice_ptt_cancel,
+            get_exec_socket_info,
+            reconnect_gateway_cmd,
+            operator_talk_config,
+            get_automation_bridge_status,
         ])
         .run(tauri::generate_context!())
         .expect("error running OpenClaw Linux app");
@@ -130,6 +151,17 @@ where
     })
     .map_err(|e| e.to_string())?;
     rx.recv().map_err(|_| "main thread window channel closed".to_string())?
+}
+
+pub(crate) fn apply_app_icon<'a, R: tauri::Runtime, M: tauri::Manager<R>>(
+    app: &'a AppHandle<R>,
+    builder: WebviewWindowBuilder<'a, R, M>,
+) -> Result<WebviewWindowBuilder<'a, R, M>, String> {
+    let mut builder = builder;
+    if let Some(icon) = app.default_window_icon() {
+        builder = builder.icon(icon.clone()).map_err(|e| e.to_string())?;
+    }
+    Ok(builder)
 }
 
 fn schedule_window_on_main(app: &AppHandle, f: impl FnOnce(&AppHandle) -> Result<(), String> + Send + 'static) {
@@ -153,45 +185,61 @@ fn show_settings_window(app: &AppHandle) -> Result<(), String> {
         win.set_focus().map_err(|e| e.to_string())?;
         return Ok(());
     }
-    WebviewWindowBuilder::new(app, "settings", WebviewUrl::App("index.html".into()))
-        .title("OpenClaw Settings")
-        .inner_size(1000.0, 760.0)
-        .visible(true)
-        .focused(true)
-        .center()
-        .build()
+    apply_app_icon(
+        app,
+        WebviewWindowBuilder::new(app, "settings", WebviewUrl::App("index.html".into()))
+            .title("OpenClaw Settings")
+            .inner_size(1000.0, 760.0)
+            .visible(true)
+            .focused(true)
+            .center(),
+    )?
+    .build()
         .map_err(|e| e.to_string())?
         .set_focus()
         .map_err(|e| e.to_string())?;
     Ok(())
 }
 
-fn show_dashboard_window(app: &AppHandle) -> Result<(), String> {
+fn show_dashboard_window(app: &AppHandle, chat_session: Option<&str>) -> Result<(), String> {
     let settings = GatewayConnectionSettings::load();
     let gateway = openclaw_kit::load_gateway_config();
     let auth = openclaw_kit::resolve_dashboard_auth(&settings, &gateway)?;
-    let dashboard_url =
-        openclaw_kit::dashboard_url_with_token_fragment(auth.http_url.clone(), auth.token.as_deref());
+    let dashboard_url = if chat_session.is_some_and(|s| !s.trim().is_empty()) {
+        openclaw_kit::control_ui_chat_url_with_session(&auth, chat_session)
+    } else {
+        openclaw_kit::dashboard_url_with_token_fragment(
+            auth.http_url.clone(),
+            auth.token.as_deref(),
+        )
+    };
     let init_script = openclaw_kit::native_control_auth_init_script(&auth);
     let label = "dashboard";
+    let url_js = serde_json::to_string(dashboard_url.as_str()).unwrap_or_else(|_| "\"\"".into());
     if let Some(win) = app.get_webview_window(label) {
         win.show().map_err(|e| e.to_string())?;
         win.set_focus().map_err(|e| e.to_string())?;
         let _ = win.eval(&init_script);
+        if chat_session.is_some_and(|s| !s.trim().is_empty()) {
+            let _ = win.eval(&format!("window.location.href = {url_js};"));
+        }
         hide_settings_windows_if_visible(app);
         return Ok(());
     }
     let external =
         tauri::Url::parse(dashboard_url.as_str()).map_err(|e: url::ParseError| e.to_string())?;
-    let win = WebviewWindowBuilder::new(app, label, WebviewUrl::External(external))
-        .title("OpenClaw Dashboard")
-        .inner_size(1200.0, 900.0)
-        .visible(true)
-        .focused(true)
-        .center()
-        .initialization_script(init_script)
-        .build()
-        .map_err(|e| e.to_string())?;
+    let win = apply_app_icon(
+        app,
+        WebviewWindowBuilder::new(app, label, WebviewUrl::External(external))
+            .title("OpenClaw Dashboard")
+            .inner_size(1200.0, 900.0)
+            .visible(true)
+            .focused(true)
+            .center()
+            .initialization_script(init_script),
+    )?
+    .build()
+    .map_err(|e| e.to_string())?;
     win.set_focus().map_err(|e| e.to_string())?;
     hide_settings_windows_if_visible(app);
     Ok(())
@@ -205,30 +253,42 @@ fn hide_settings_windows_if_visible(app: &AppHandle) {
     }
 }
 
-fn show_webchat_window(app: &AppHandle) -> Result<(), String> {
+fn show_webchat_window(app: &AppHandle, session: Option<&str>) -> Result<(), String> {
+    let session_key = GatewayConnectionSettings::resolved_webchat_session(session);
+    if let Err(err) = GatewayConnectionSettings::remember_webchat_session(session_key.as_deref()) {
+        tracing::warn!("failed to persist last webchat session: {err}");
+    }
+    let title = GatewayConnectionSettings::webchat_window_title(session_key.as_deref());
     let settings = GatewayConnectionSettings::load();
     let gateway = openclaw_kit::load_gateway_config();
     let auth = openclaw_kit::resolve_dashboard_auth(&settings, &gateway)?;
-    let webchat_url = openclaw_kit::control_ui_chat_url(&auth);
+    let webchat_url =
+        openclaw_kit::control_ui_chat_url_with_session(&auth, session_key.as_deref());
     let init_script = openclaw_kit::native_control_auth_init_script(&auth);
     let label = "webchat";
+    let url_js = serde_json::to_string(webchat_url.as_str()).unwrap_or_else(|_| "\"\"".into());
     if let Some(win) = app.get_webview_window(label) {
         win.show().map_err(|e| e.to_string())?;
         win.set_focus().map_err(|e| e.to_string())?;
+        let _ = win.set_title(&title);
         let _ = win.eval(&init_script);
+        let _ = win.eval(&format!("window.location.href = {url_js};"));
         return Ok(());
     }
     let external =
         tauri::Url::parse(webchat_url.as_str()).map_err(|e: url::ParseError| e.to_string())?;
-    let win = WebviewWindowBuilder::new(app, label, WebviewUrl::External(external))
-        .title("OpenClaw WebChat")
-        .inner_size(900.0, 800.0)
-        .visible(true)
-        .focused(true)
-        .center()
-        .initialization_script(init_script)
-        .build()
-        .map_err(|e| e.to_string())?;
+    let win = apply_app_icon(
+        app,
+        WebviewWindowBuilder::new(app, label, WebviewUrl::External(external))
+            .title(title)
+            .inner_size(900.0, 800.0)
+            .visible(true)
+            .focused(true)
+            .center()
+            .initialization_script(init_script),
+    )?
+    .build()
+    .map_err(|e| e.to_string())?;
     win.set_focus().map_err(|e| e.to_string())?;
     Ok(())
 }
@@ -237,8 +297,21 @@ fn setup_tray(app: &AppHandle) -> tauri::Result<()> {
     let dashboard_menu = MenuItem::with_id(app, "dashboard", "Open Dashboard", true, None::<&str>)?;
     let webchat_menu = MenuItem::with_id(app, "webchat", "Open WebChat", true, None::<&str>)?;
     let settings_menu = MenuItem::with_id(app, "settings", "Settings", true, None::<&str>)?;
+    let reconnect_menu =
+        MenuItem::with_id(app, "reconnect", "Reconnect gateway", true, None::<&str>)?;
+    let about_menu = MenuItem::with_id(app, "about", "About", true, None::<&str>)?;
     let quit = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
-    let menu = Menu::with_items(app, &[&dashboard_menu, &webchat_menu, &settings_menu, &quit])?;
+    let menu = Menu::with_items(
+        app,
+        &[
+            &dashboard_menu,
+            &webchat_menu,
+            &settings_menu,
+            &reconnect_menu,
+            &about_menu,
+            &quit,
+        ],
+    )?;
 
     let mut tray_builder = TrayIconBuilder::with_id("main")
         .menu(&menu)
@@ -249,13 +322,32 @@ fn setup_tray(app: &AppHandle) -> tauri::Result<()> {
     let _tray = tray_builder
         .on_menu_event(|app, event| match event.id.as_ref() {
             "dashboard" => {
-                schedule_window_on_main(app, show_dashboard_window);
+                schedule_window_on_main(app, |app| show_dashboard_window(app, None));
             }
             "webchat" => {
-                schedule_window_on_main(app, show_webchat_window);
+                schedule_window_on_main(app, |app| {
+                    let settings = GatewayConnectionSettings::load();
+                    let session = settings.last_webchat_session.as_deref();
+                    show_webchat_window(app, session)
+                });
             }
             "settings" => {
                 schedule_window_on_main(app, show_settings_window);
+            }
+            "reconnect" => {
+                let app = app.clone();
+                tauri::async_runtime::spawn(async move {
+                    if let Err(err) = reconnect_gateway_inner(&app).await {
+                        emit_connection_error(&app, err);
+                    }
+                });
+            }
+            "about" => {
+                schedule_window_on_main(app, |app| {
+                    show_settings_window(app)?;
+                    let _ = app.emit("settings-tab", "about");
+                    Ok(())
+                });
             }
             "quit" => {
                 app.exit(0);
@@ -269,7 +361,7 @@ fn setup_tray(app: &AppHandle) -> tauri::Result<()> {
                 ..
             } = event
             {
-                schedule_window_on_main(tray.app_handle(), show_dashboard_window);
+                schedule_window_on_main(tray.app_handle(), |app| show_dashboard_window(app, None));
             }
         })
         .build(app)?;
@@ -290,12 +382,21 @@ async fn ensure_connection_mode(
         }
         return Ok(());
     }
+    ensure_remote_tunnel(app, settings).await
+}
+
+pub(crate) async fn ensure_remote_tunnel(
+    app: &AppHandle,
+    settings: &GatewayConnectionSettings,
+) -> Result<(), String> {
     if settings.uses_ssh_tunnel() {
-        start_remote_tunnel_inner(app, settings).await?;
+        start_remote_tunnel_inner(app, settings).await
     } else if let Some(state) = app.try_state::<AppState>() {
         state.stop_remote_tunnel().await;
+        Ok(())
+    } else {
+        Ok(())
     }
-    Ok(())
 }
 
 async fn start_remote_tunnel_inner(
@@ -320,7 +421,7 @@ async fn start_remote_tunnel_inner(
         state.set_remote_tunnel(Some(tunnel)).await;
         let tunnel_status = format!("SSH tunnel active on port {local_port}");
         state.set_connection_status(tunnel_status.clone()).await;
-        gateway_runtime::apply_tray_tooltip(app, &tunnel_status);
+        gateway_runtime::schedule_tray_tooltip_refresh(app);
         let _ = app.emit("gateway-connection-status", tunnel_status);
     }
     Ok(())
@@ -352,11 +453,10 @@ fn start_tray_status_poll(app: AppHandle) {
         let mut ticker = tokio::time::interval(std::time::Duration::from_secs(30));
         loop {
             ticker.tick().await;
-            let Some(state) = app.try_state::<AppState>() else {
+            if app.try_state::<AppState>().is_none() {
                 break;
-            };
-            let status = state.connection_status().await;
-            gateway_runtime::apply_tray_tooltip(&app, &status);
+            }
+            gateway_runtime::refresh_tray_tooltip(&app).await;
         }
     });
 }
@@ -378,31 +478,71 @@ fn register_deep_links(app: &AppHandle) {
 
 async fn handle_deep_link(app: &AppHandle, link: openclaw_kit::DeepLink) {
     use openclaw_kit::DeepLink;
+    use openclaw_kit::is_direct_lan_host;
     match link {
         DeepLink::Dashboard => {
             let _ = open_dashboard(app.clone()).await;
         }
-        DeepLink::WebChat => {
-            let _ = run_window_on_main(&app, show_webchat_window);
+        DeepLink::WebChat { session } => {
+            let session = session.filter(|s| !s.is_empty());
+            let _ = run_window_on_main(&app, move |a| show_webchat_window(a, session.as_deref()));
+        }
+        DeepLink::Canvas { session } => {
+            let session_id = session.filter(|s| !s.is_empty()).unwrap_or_else(|| "main".into());
+            let _ = run_window_on_main(&app, move |app| canvas::open_canvas_window(app, &session_id));
+        }
+        DeepLink::Settings => {
+            let _ = open_settings(app.clone()).await;
         }
         DeepLink::Gateway { host, port } => {
-            if let Some(state) = app.try_state::<AppState>() {
-                let mut settings = state.settings().await;
-                if let Some(host) = host.filter(|h| !h.is_empty()) {
-                    settings.host = Some(host);
+            let mut settings = if let Some(state) = app.try_state::<AppState>() {
+                state.settings().await
+            } else {
+                GatewayConnectionSettings::load()
+            };
+            if let Some(host) = host.filter(|h| !h.is_empty()) {
+                settings.host = Some(host.clone());
+                if is_direct_lan_host(&host) {
+                    settings.mode = ConnectionMode::Local;
+                    settings.remote_direct = true;
+                } else {
+                    settings.mode = ConnectionMode::Remote;
                 }
-                if let Some(port) = port {
-                    settings.port = port;
-                }
-                let _ = settings.save();
+            }
+            if let Some(port) = port {
+                settings.port = port;
+            }
+            if let Err(err) = settings.save() {
+                emit_connection_error(app, err.to_string());
+            } else if let Some(state) = app.try_state::<AppState>() {
                 state.set_settings(settings.clone()).await;
-                let _ = ensure_connection_mode(app, &settings).await;
+            }
+            if let Err(err) = ensure_connection_mode(app, &settings).await {
+                emit_connection_error(app, err);
+            }
+            if let Some(broker) = app.try_state::<Arc<exec_broker::ExecApprovalBroker>>() {
+                restart_gateway_runtimes(app, settings, broker.inner().clone()).await;
             }
             let _ = open_settings(app.clone()).await;
         }
-        DeepLink::Agent { message, .. } => {
-            let _ = app.emit("deep-link-agent", message);
-            let _ = open_dashboard(app.clone()).await;
+        DeepLink::Agent {
+            message,
+            session,
+            ..
+        } => {
+            let payload = serde_json::json!({
+                "message": message,
+                "session": session,
+            });
+            let _ = app.emit("deep-link-agent", payload);
+            if session.as_ref().is_some_and(|s| !s.is_empty()) {
+                let session_key = session.clone();
+                let _ = run_window_on_main(&app, move |a| {
+                    show_webchat_window(a, session_key.as_deref())
+                });
+            } else {
+                let _ = open_dashboard(app.clone()).await;
+            }
         }
     }
 }
@@ -413,6 +553,39 @@ async fn get_gateway_status() -> Result<String, String> {
         .gateway_status_json()
         .await
         .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+async fn get_gateway_version_info(state: State<'_, AppState>) -> Result<String, String> {
+    let mut version = None;
+    let mut source = None::<&str>;
+    if let Ok(json) = GatewayCli::new().gateway_status_json().await {
+        version = openclaw_kit::gateway_version_from_daemon_status_json(&json);
+        if version.is_some() {
+            source = Some("gateway status");
+        }
+    }
+    let operator_connected = state.operator().await.is_some();
+    if version.is_none() {
+        if let Some(op) = state.operator().await {
+            version = op.server_version().await;
+            if version.is_some() {
+                source = Some("operator connect");
+            }
+        }
+    }
+    let operator_health_ok = if let Some(op) = state.operator().await {
+        op.health().await.is_ok()
+    } else {
+        false
+    };
+    serde_json::to_string_pretty(&serde_json::json!({
+        "version": version,
+        "source": source,
+        "operatorConnected": operator_connected,
+        "operatorHealthOk": operator_health_ok,
+    }))
+    .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
@@ -488,7 +661,7 @@ async fn stop_remote_tunnel(app: AppHandle, state: State<'_, AppState>) -> Resul
     state.stop_remote_tunnel().await;
     let msg = "SSH tunnel stopped";
     state.set_connection_status(msg).await;
-    gateway_runtime::apply_tray_tooltip(&app, msg);
+    gateway_runtime::refresh_tray_tooltip(&app).await;
     let _ = app.emit("gateway-connection-status", msg);
     Ok(())
 }
@@ -496,6 +669,11 @@ async fn stop_remote_tunnel(app: AppHandle, state: State<'_, AppState>) -> Resul
 #[tauri::command]
 async fn get_connection_status(state: State<'_, AppState>) -> Result<String, String> {
     Ok(state.connection_status().await)
+}
+
+#[tauri::command]
+async fn get_remote_tunnel_active(state: State<'_, AppState>) -> Result<bool, String> {
+    Ok(state.has_remote_tunnel().await)
 }
 
 #[tauri::command]
@@ -507,8 +685,27 @@ async fn get_voice_settings(voice: State<'_, voice::VoiceService>) -> Result<ope
 async fn save_voice_settings(
     config: openclaw_voice::VoiceWakeConfig,
     voice: State<'_, voice::VoiceService>,
+    state: State<'_, AppState>,
 ) -> Result<(), String> {
-    voice.apply(config)
+    voice.apply(config.clone())?;
+    if let Some(op) = state.operator().await {
+        let triggers: Vec<String> = if config.phrases.is_empty() {
+            vec!["open claw".into()]
+        } else {
+            config.phrases
+        };
+        if let Err(err) = op.voicewake_set(&triggers).await {
+            tracing::warn!("voicewake.set failed (local settings saved): {err}");
+        }
+    }
+    Ok(())
+}
+
+#[tauri::command]
+async fn get_pending_exec_approvals(
+    broker: State<'_, Arc<exec_broker::ExecApprovalBroker>>,
+) -> Result<Vec<exec_broker::PendingExecApproval>, String> {
+    Ok(broker.list_pending().await)
 }
 
 #[tauri::command]
@@ -546,12 +743,19 @@ fn resolve_control_ui_index() -> Option<PathBuf> {
 
 #[tauri::command]
 async fn open_dashboard(app: AppHandle) -> Result<(), String> {
-    run_window_on_main(&app, show_dashboard_window)
+    run_window_on_main(&app, |app| show_dashboard_window(app, None))
 }
 
 #[tauri::command]
-async fn open_webchat(app: AppHandle) -> Result<(), String> {
-    run_window_on_main(&app, show_webchat_window)
+async fn open_dashboard_chat(app: AppHandle, session: Option<String>) -> Result<(), String> {
+    let session = session.filter(|s| !s.trim().is_empty());
+    run_window_on_main(&app, move |app| show_dashboard_window(app, session.as_deref()))
+}
+
+#[tauri::command]
+async fn open_webchat(app: AppHandle, session: Option<String>) -> Result<(), String> {
+    let session = session.filter(|s| !s.trim().is_empty());
+    run_window_on_main(&app, move |app| show_webchat_window(app, session.as_deref()))
 }
 
 #[tauri::command]
@@ -570,8 +774,25 @@ fn voice_ptt_start(voice: State<'_, voice::VoiceService>) -> Result<(), String> 
 }
 
 #[tauri::command]
-fn voice_ptt_stop(voice: State<'_, voice::VoiceService>) -> Result<Option<String>, String> {
+fn voice_ptt_stop(
+    voice: State<'_, voice::VoiceService>,
+) -> Result<openclaw_voice::PttStopResult, String> {
     voice.stop_ptt()
+}
+
+#[tauri::command]
+fn voice_ptt_cancel(voice: State<'_, voice::VoiceService>) -> Result<(), String> {
+    voice.cancel_ptt()
+}
+
+#[tauri::command]
+fn get_exec_socket_info() -> Result<String, String> {
+    let config = openclaw_node_host::ExecSocketConfig::default_paths();
+    serde_json::to_string_pretty(&serde_json::json!({
+        "socketPath": config.socket_path,
+        "hint": "CLI exec approvals use this Unix socket while the node runtime is connected.",
+    }))
+    .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
@@ -650,8 +871,128 @@ async fn operator_cron_list(state: State<'_, AppState>) -> Result<String, String
 }
 
 #[tauri::command]
+async fn operator_cron_status(state: State<'_, AppState>) -> Result<String, String> {
+    with_operator(state, |op| async move { op.cron_status().await }).await
+}
+
+#[tauri::command]
+async fn operator_cron_run(state: State<'_, AppState>, job_id: String) -> Result<String, String> {
+    let id = job_id.trim().to_string();
+    if id.is_empty() {
+        return Err("job id required".into());
+    }
+    with_operator(state, |op| async move { op.cron_run(&id).await }).await
+}
+
+#[tauri::command]
+fn get_device_identity() -> Result<String, String> {
+    let identity = openclaw_kit::load_or_create_device_identity().map_err(|e| e.to_string())?;
+    serde_json::to_string_pretty(&serde_json::json!({
+        "deviceId": identity.device_id,
+        "publicKeyPem": identity.public_key_pem,
+    }))
+    .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+async fn get_connection_health(state: State<'_, AppState>) -> Result<String, String> {
+    let operator = state.operator().await.is_some();
+    let node = state.has_node_runtime().await;
+    let tunnel = state.has_remote_tunnel().await;
+    let message = state.connection_status().await;
+    let operator_health_ok = if let Some(op) = state.operator().await {
+        op.health().await.is_ok()
+    } else {
+        false
+    };
+    serde_json::to_string_pretty(&serde_json::json!({
+        "operatorConnected": operator,
+        "nodeConnected": node,
+        "sshTunnelActive": tunnel,
+        "operatorHealthOk": operator_health_ok,
+        "message": message,
+    }))
+    .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+fn get_app_build_info() -> Result<String, String> {
+    serde_json::to_string_pretty(&serde_json::json!({
+        "appVersion": env!("CARGO_PKG_VERSION"),
+        "protocolVersion": openclaw_protocol::PROTOCOL_VERSION,
+        "minClientProtocolVersion": openclaw_protocol::MIN_CLIENT_PROTOCOL_VERSION,
+        "openclawBin": openclaw_kit::resolve_openclaw_bin(),
+        "platform": "linux",
+    }))
+    .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+async fn operator_channel_start(
+    state: State<'_, AppState>,
+    channel: String,
+) -> Result<String, String> {
+    let id = channel.trim().to_string();
+    if id.is_empty() {
+        return Err("channel id required".into());
+    }
+    with_operator(state, |op| async move { op.channel_start(&id).await }).await
+}
+
+#[tauri::command]
+async fn operator_channel_stop(
+    state: State<'_, AppState>,
+    channel: String,
+) -> Result<String, String> {
+    let id = channel.trim().to_string();
+    if id.is_empty() {
+        return Err("channel id required".into());
+    }
+    with_operator(state, |op| async move { op.channel_stop(&id).await }).await
+}
+
+#[tauri::command]
 async fn operator_sessions_list(state: State<'_, AppState>) -> Result<String, String> {
     with_operator(state, |op| async move { op.sessions_list().await }).await
+}
+
+#[tauri::command]
+async fn operator_sessions_preview(
+    state: State<'_, AppState>,
+    session_keys: Vec<String>,
+    limit: Option<u32>,
+) -> Result<String, String> {
+    let keys: Vec<String> = session_keys
+        .into_iter()
+        .map(|k| k.trim().to_string())
+        .filter(|k| !k.is_empty())
+        .collect();
+    if keys.is_empty() {
+        return Err("at least one session key required".into());
+    }
+    with_operator(state, |op| async move { op.sessions_preview(&keys, limit).await }).await
+}
+
+#[tauri::command]
+async fn operator_sessions_describe(
+    state: State<'_, AppState>,
+    session_key: String,
+    include_derived_titles: Option<bool>,
+    include_last_message: Option<bool>,
+) -> Result<String, String> {
+    let key = session_key.trim().to_string();
+    if key.is_empty() {
+        return Err("session key required".into());
+    }
+    with_operator(state, |op| async move {
+        op.sessions_describe(
+            &key,
+            include_derived_titles.unwrap_or(true),
+            include_last_message.unwrap_or(true),
+        )
+        .await
+    })
+    .await
 }
 
 #[tauri::command]
@@ -661,7 +1002,7 @@ async fn operator_config_get(state: State<'_, AppState>) -> Result<String, Strin
 
 #[tauri::command]
 async fn operator_instances(state: State<'_, AppState>) -> Result<String, String> {
-    with_operator(state, |op| async move { op.node_list().await }).await
+    with_operator(state, |op| async move { op.system_presence().await }).await
 }
 
 #[tauri::command]
@@ -706,13 +1047,81 @@ async fn open_test_canvas(app: AppHandle) -> Result<(), String> {
 }
 
 #[tauri::command]
+fn cli_installed_location() -> Result<Option<String>, String> {
+    Ok(openclaw_kit::installed_location().map(|p| p.to_string_lossy().into_owned()))
+}
+
+#[tauri::command]
+async fn reconnect_gateway_inner(app: &AppHandle) -> Result<String, String> {
+    let settings = if let Some(state) = app.try_state::<AppState>() {
+        state.settings().await
+    } else {
+        GatewayConnectionSettings::load()
+    };
+    if should_autostart_gateway(&settings) {
+        GatewayCli::new()
+            .ensure_gateway_running()
+            .await
+            .map_err(|e| e.to_string())?;
+    }
+    ensure_connection_mode(app, &settings).await?;
+    if let Some(broker) = app.try_state::<Arc<exec_broker::ExecApprovalBroker>>() {
+        restart_gateway_runtimes(app, settings.clone(), broker.inner().clone()).await;
+    }
+    if let Some(state) = app.try_state::<AppState>() {
+        let op = openclaw_kit::OperatorGateway::connect(&settings).await?;
+        state.set_operator(Arc::new(op)).await;
+        let msg = "operator reconnected (tray)";
+        state.set_connection_status(msg).await;
+        gateway_runtime::refresh_tray_tooltip(app).await;
+        let _ = app.emit("gateway-connection-status", msg);
+        return Ok(msg.into());
+    }
+    Err("app state unavailable".into())
+}
+
+#[tauri::command]
+async fn reconnect_gateway_cmd(app: AppHandle) -> Result<String, String> {
+    reconnect_gateway_inner(&app).await
+}
+
+#[tauri::command]
+async fn operator_talk_config(state: State<'_, AppState>) -> Result<String, String> {
+    let op = state
+        .operator()
+        .await
+        .ok_or("operator not connected")?;
+    let value = op.talk_config().await?;
+    serde_json::to_string_pretty(&value).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+fn get_automation_bridge_status() -> Result<String, String> {
+    serde_json::to_string_pretty(&openclaw_bridge::bridge_status()).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
 async fn install_cli(app: AppHandle) -> Result<String, String> {
+    let version = std::env::var("OPENCLAW_CLI_INSTALL_VERSION").unwrap_or_else(|_| "latest".into());
+    let script = openclaw_kit::install_shell_command(&version);
     let output = app
         .shell()
-        .command("npm")
-        .args(["install", "-g", "openclaw@latest"])
+        .command("bash")
+        .args(["-lc", &script])
         .output()
         .await
         .map_err(|e| e.to_string())?;
-    Ok(String::from_utf8_lossy(&output.stdout).into_owned())
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    if output.status.success() {
+        let path = openclaw_kit::installed_location()
+            .map(|p| p.display().to_string())
+            .unwrap_or_else(|| openclaw_kit::default_install_prefix().join("bin/openclaw").display().to_string());
+        Ok(format!("{stdout}\nInstalled CLI at: {path}"))
+    } else {
+        Err(format!(
+            "CLI install failed (exit {:?})\n{stdout}\n{stderr}",
+            output.status.code()
+        ))
+    }
 }

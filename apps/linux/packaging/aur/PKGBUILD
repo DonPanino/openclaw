@@ -22,5 +22,8 @@ build() {
 package() {
   cd "openclaw-openclaw-$pkgver"
   install -Dm755 apps/linux/target/release/openclaw-linux-app "$pkgdir/usr/bin/openclaw-app"
-  install -Dm644 apps/linux/packaging/aur/openclaw-app.desktop "$pkgdir/usr/share/applications/openclaw-app.desktop"
+  install -Dm644 apps/linux/packaging/aur/ai.openclaw.linux.desktop "$pkgdir/usr/share/applications/ai.openclaw.linux.desktop"
+  install -Dm644 apps/linux/openclaw-app/src-tauri/icons/32x32.png "$pkgdir/usr/share/icons/hicolor/32x32/apps/ai.openclaw.linux.png"
+  install -Dm644 apps/linux/openclaw-app/src-tauri/icons/128x128.png "$pkgdir/usr/share/icons/hicolor/128x128/apps/ai.openclaw.linux.png"
+  install -Dm644 apps/linux/openclaw-app/src-tauri/icons/icon.png "$pkgdir/usr/share/icons/hicolor/512x512/apps/ai.openclaw.linux.png"
 }

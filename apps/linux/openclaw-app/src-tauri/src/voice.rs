@@ -1,5 +1,8 @@
 use openclaw_kit::gateway_config::GatewayConnectionSettings;
-use openclaw_voice::{collect_voice_diagnostics, VoiceDiagnostics, VoiceRuntime, VoiceWakeConfig};
+use openclaw_voice::{
+    collect_voice_diagnostics, PttError, PttStopResult, VoiceDiagnostics, VoiceRuntime,
+    VoiceWakeConfig,
+};
 use std::sync::Mutex;
 
 pub struct VoiceService {
@@ -34,6 +37,8 @@ impl VoiceService {
             .unwrap_or_default()
     }
 
+    /// Persists linux-app voice settings locally. Gateway `voicewake.set` is invoked from
+    /// `save_voice_settings` when an operator session is connected (macOS global sync parity).
     pub fn apply(&self, config: VoiceWakeConfig) -> Result<(), String> {
         let mut settings = GatewayConnectionSettings::load();
         settings.voice_wake_enabled = config.enabled;
@@ -52,29 +57,46 @@ impl VoiceService {
 
     pub fn start_ptt(&self) -> Result<(), String> {
         let mut rt = self.runtime.lock().map_err(|e| e.to_string())?;
-        rt.start_ptt();
-        Ok(())
+        rt.start_ptt().map_err(ptt_error_message)
     }
 
-    pub fn stop_ptt(&self) -> Result<Option<String>, String> {
+    pub fn stop_ptt(&self) -> Result<PttStopResult, String> {
         let mut rt = self.runtime.lock().map_err(|e| e.to_string())?;
         Ok(rt.stop_ptt())
     }
 
+    pub fn cancel_ptt(&self) -> Result<(), String> {
+        let mut rt = self.runtime.lock().map_err(|e| e.to_string())?;
+        rt.cancel_ptt();
+        Ok(())
+    }
+
+    pub fn ptt_once(&self) -> Result<PttStopResult, String> {
+        let mut rt = self.runtime.lock().map_err(|e| e.to_string())?;
+        Ok(rt.ptt_once())
+    }
+
     pub async fn diagnostics(&self) -> Result<VoiceDiagnostics, String> {
         let settings = GatewayConnectionSettings::load();
-        let ptt = self
+        let (ptt, active) = self
             .runtime
             .lock()
-            .map(|rt| rt.ptt_state())
+            .map(|rt| {
+                let ptt = rt.ptt_state();
+                let active = ptt == openclaw_voice::PttState::Recording;
+                (ptt, active)
+            })
             .map_err(|e| e.to_string())?;
-        Ok(
-            collect_voice_diagnostics(
-                settings.voice_wake_enabled,
-                settings.talk_enabled,
-                ptt,
-            )
-            .await,
+        Ok(collect_voice_diagnostics(
+            settings.voice_wake_enabled,
+            settings.talk_enabled,
+            ptt,
+            active,
         )
+        .await)
     }
+}
+
+fn ptt_error_message(err: PttError) -> String {
+    err.to_string()
 }

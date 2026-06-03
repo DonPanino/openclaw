@@ -32,6 +32,9 @@ pub struct GatewayConnectionSettings {
     /// When true (default), local mode starts the systemd gateway user unit on app launch if it is not already running.
     #[serde(default = "default_gateway_autostart")]
     pub gateway_autostart: bool,
+    /// Last WebChat session key (Control UI `/chat?session=`); restored when opening WebChat without an explicit session.
+    #[serde(default)]
+    pub last_webchat_session: Option<String>,
 }
 
 fn default_gateway_autostart() -> bool {
@@ -61,6 +64,7 @@ impl Default for GatewayConnectionSettings {
             screen_enabled: true,
             location_enabled: true,
             gateway_autostart: default_gateway_autostart(),
+            last_webchat_session: None,
         }
     }
 }
@@ -167,6 +171,47 @@ impl GatewayConnectionSettings {
         let scheme = if self.use_tls { "wss" } else { "ws" };
         url::Url::parse(&format!("{scheme}://{host}:{}", self.port)).expect("valid gateway url")
     }
+
+    /// Explicit session wins; otherwise returns persisted `last_webchat_session`.
+    pub fn resolved_webchat_session(explicit: Option<&str>) -> Option<String> {
+        explicit
+            .map(str::trim)
+            .filter(|s| !s.is_empty())
+            .map(str::to_string)
+            .or_else(|| {
+                Self::load()
+                    .last_webchat_session
+                    .as_ref()
+                    .map(|s| s.trim().to_string())
+                    .filter(|s| !s.is_empty())
+            })
+    }
+
+    /// Persists a non-empty session key; does not clear when `session` is absent.
+    pub fn remember_webchat_session(session: Option<&str>) -> std::io::Result<()> {
+        let Some(trimmed) = session.map(str::trim).filter(|s| !s.is_empty()) else {
+            return Ok(());
+        };
+        let mut settings = Self::load();
+        let next = trimmed.to_string();
+        if settings.last_webchat_session.as_deref() == Some(trimmed) {
+            return Ok(());
+        }
+        settings.last_webchat_session = Some(next);
+        settings.save()
+    }
+
+    pub fn webchat_window_title(session: Option<&str>) -> String {
+        let Some(key) = session.map(str::trim).filter(|s| !s.is_empty()) else {
+            return "OpenClaw WebChat".into();
+        };
+        let short = if key.len() > 48 {
+            format!("{}…", &key[..45])
+        } else {
+            key.to_string()
+        };
+        format!("OpenClaw WebChat — {short}")
+    }
 }
 
 #[cfg(test)]
@@ -179,6 +224,85 @@ mod tests {
         let (camera, location, screen, talk) = settings.node_advertisement_flags();
         assert!(camera && location && screen);
         assert!(!talk);
+    }
+
+    #[test]
+    fn resolved_webchat_session_prefers_explicit() {
+        assert_eq!(
+            GatewayConnectionSettings::resolved_webchat_session(Some("agent:other:main")),
+            Some("agent:other:main".into())
+        );
+        assert_eq!(
+            GatewayConnectionSettings::resolved_webchat_session(Some("  ")),
+            None
+        );
+    }
+
+    #[test]
+    fn remember_webchat_session_round_trip() {
+        let dir = tempfile::tempdir().expect("tempdir");
+        let prev_home = std::env::var_os("HOME");
+        std::env::set_var("HOME", dir.path());
+        let result = std::panic::catch_unwind(|| {
+            GatewayConnectionSettings::default()
+                .save()
+                .expect("seed settings");
+            GatewayConnectionSettings::remember_webchat_session(Some("agent:main:main"))
+                .expect("remember");
+            let loaded = GatewayConnectionSettings::load();
+            assert_eq!(
+                loaded.last_webchat_session.as_deref(),
+                Some("agent:main:main")
+            );
+            assert_eq!(
+                GatewayConnectionSettings::resolved_webchat_session(None),
+                Some("agent:main:main".into())
+            );
+            GatewayConnectionSettings::remember_webchat_session(Some("agent:main:main"))
+                .expect("remember noop");
+            assert_eq!(
+                GatewayConnectionSettings::resolved_webchat_session(Some("agent:other:main")),
+                Some("agent:other:main".into())
+            );
+            GatewayConnectionSettings::remember_webchat_session(None).expect("absent noop");
+            assert_eq!(
+                GatewayConnectionSettings::load()
+                    .last_webchat_session
+                    .as_deref(),
+                Some("agent:main:main")
+            );
+        });
+        match prev_home {
+            Some(home) => std::env::set_var("HOME", home),
+            None => std::env::remove_var("HOME"),
+        }
+        result.expect("remember_webchat_session_round_trip");
+    }
+
+    #[test]
+    fn webchat_window_title_includes_session() {
+        assert_eq!(
+            GatewayConnectionSettings::webchat_window_title(Some("agent:main:main")),
+            "OpenClaw WebChat — agent:main:main"
+        );
+        assert_eq!(
+            GatewayConnectionSettings::webchat_window_title(None),
+            "OpenClaw WebChat"
+        );
+    }
+
+    #[test]
+    fn gateway_ws_url_uses_wss_when_tls_enabled() {
+        let settings = GatewayConnectionSettings {
+            host: Some("example.com".into()),
+            port: 443,
+            use_tls: true,
+            ..GatewayConnectionSettings::default()
+        };
+        let url = settings.gateway_ws_url();
+        assert_eq!(url.scheme(), "wss");
+        assert_eq!(url.host_str(), Some("example.com"));
+        assert!(url.port().unwrap_or(443) == 443);
     }
 }
 

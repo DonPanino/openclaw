@@ -61,6 +61,7 @@ pub struct GatewayClient {
     outbound: mpsc::Sender<GatewayFrame>,
     pending: PendingMap,
     event_tx: mpsc::Sender<EventFrame>,
+    server_version: Arc<Mutex<Option<String>>>,
 }
 
 impl GatewayClient {
@@ -138,6 +139,7 @@ impl GatewayClient {
             outbound: outbound_tx,
             pending,
             event_tx,
+            server_version: Arc::new(Mutex::new(None)),
         };
 
         let challenge_nonce = tokio::time::timeout(std::time::Duration::from_secs(10), challenge_rx)
@@ -198,7 +200,19 @@ impl GatewayClient {
         if hello.get("type").and_then(|v| v.as_str()) != Some("hello-ok") {
             return Err(GatewayError::ConnectFailed(format!("unexpected hello: {hello}")));
         }
+        let version = hello
+            .get("server")
+            .and_then(|s| s.get("version"))
+            .and_then(|v| v.as_str())
+            .map(str::trim)
+            .filter(|s| !s.is_empty())
+            .map(str::to_string);
+        *self.server_version.lock().await = version;
         Ok(())
+    }
+
+    pub async fn server_version(&self) -> Option<String> {
+        self.server_version.lock().await.clone()
     }
 
     pub async fn request(&self, method: &str, params: Option<Value>) -> Result<Value, GatewayError> {

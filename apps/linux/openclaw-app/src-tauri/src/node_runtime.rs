@@ -9,7 +9,7 @@ use openclaw_protocol::frames::EventFrame;
 use serde_json::{json, Value};
 use std::sync::Arc;
 use crate::canvas;
-use tauri::AppHandle;
+use tauri::{AppHandle, Manager};
 use tokio::sync::mpsc;
 
 pub struct NodeRuntimeHandle {
@@ -80,6 +80,13 @@ impl NodeRuntimeHandle {
                     }
                 }
             }
+            if let Some(state) = app_events.try_state::<crate::state::AppState>() {
+                state.clear_node_runtime_slot().await;
+            }
+            crate::gateway_runtime::publish_connection_status(
+                &app_events,
+                "node disconnected; reconnecting…",
+            );
         });
 
         Ok(Arc::new(Self {
@@ -149,19 +156,35 @@ async fn dispatch_node_command(
             Ok(json!({ "ok": true }))
         }
         "screen.snapshot" => match capture::screen_snapshot().await {
-            Ok(bytes) => Ok(json!({ "format": "png", "bytes": bytes })),
+            Ok(bytes) => Ok(json!({
+                "format": "png",
+                "base64": capture::bytes_to_base64(&bytes),
+            })),
             Err(e) => Err(e.to_string()),
         },
         "camera.snap" => match capture::camera_snap().await {
-            Ok(bytes) => Ok(json!({ "format": "jpeg", "bytes": bytes })),
+            Ok(bytes) => Ok(json!({
+                "format": "jpeg",
+                "base64": capture::bytes_to_base64(&bytes),
+            })),
             Err(e) => Err(e.to_string()),
         },
         "camera.clip" => match capture::camera_clip().await {
-            Ok(bytes) => Ok(json!({ "format": "jpeg", "bytes": bytes })),
+            Ok(bytes) => Ok(json!({
+                "format": "jpeg",
+                "base64": capture::bytes_to_base64(&bytes),
+                "durationMs": 1500,
+                "hasAudio": false,
+            })),
             Err(e) => Err(e.to_string()),
         },
         "screen.record" => match capture::screen_record().await {
-            Ok(bytes) => Ok(json!({ "format": "mp4", "bytes": bytes })),
+            Ok(rec) => Ok(json!({
+                "format": rec.format,
+                "base64": capture::bytes_to_base64(&rec.bytes),
+                "durationMs": rec.duration_ms,
+                "hasAudio": rec.has_audio,
+            })),
             Err(e) => Err(e.to_string()),
         },
         "camera.list" => match capture::list_cameras().await {

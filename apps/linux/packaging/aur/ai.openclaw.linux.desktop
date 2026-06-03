@@ -1,10 +1,13 @@
 [Desktop Entry]
-Name=OpenClaw
-Comment=OpenClaw Linux companion
-Exec=openclaw-app
-Icon=openclaw
-Terminal=false
 Type=Application
+Version=1.0
+Name=OpenClaw
+GenericName=OpenClaw Linux companion
+Comment=OpenClaw Linux companion
+Exec=openclaw-app %U
+Icon=ai.openclaw.linux
+Terminal=false
 Categories=Network;Chat;
 MimeType=x-scheme-handler/openclaw;
+StartupWMClass=ai.openclaw.linux
 StartupNotify=true

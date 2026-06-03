@@ -9,7 +9,13 @@ pub enum DeepLink {
         deliver: Option<bool>,
     },
     Dashboard,
-    WebChat,
+    WebChat {
+        session: Option<String>,
+    },
+    Settings,
+    Canvas {
+        session: Option<String>,
+    },
     Gateway {
         host: Option<String>,
         port: Option<u16>,
@@ -47,7 +53,21 @@ pub fn parse_deep_link(raw: &str) -> Option<DeepLink> {
             })
         }
         "dashboard" => Some(DeepLink::Dashboard),
-        "webchat" | "chat" => Some(DeepLink::WebChat),
+        "webchat" | "chat" => {
+            let session = url
+                .query_pairs()
+                .find(|(k, _)| k == "session" || k == "sessionKey")
+                .map(|(_, v)| v.into_owned());
+            Some(DeepLink::WebChat { session })
+        }
+        "settings" => Some(DeepLink::Settings),
+        "canvas" => {
+            let session = url
+                .query_pairs()
+                .find(|(k, _)| k == "session" || k == "sessionKey")
+                .map(|(_, v)| v.into_owned());
+            Some(DeepLink::Canvas { session })
+        }
         "gateway" => {
             let host = url
                 .query_pairs()
@@ -85,7 +105,58 @@ mod tests {
     fn parses_webchat() {
         assert!(matches!(
             parse_deep_link("openclaw://webchat"),
-            Some(DeepLink::WebChat)
+            Some(DeepLink::WebChat { session: None })
+        ));
+        let link = parse_deep_link("openclaw://webchat?session=agent:main:main").unwrap();
+        assert!(matches!(
+            link,
+            DeepLink::WebChat {
+                session: Some(s),
+            } if s == "agent:main:main"
+        ));
+    }
+
+    #[test]
+    fn parses_settings() {
+        assert!(matches!(
+            parse_deep_link("openclaw://settings"),
+            Some(DeepLink::Settings)
+        ));
+    }
+
+    #[test]
+    fn parses_canvas_session() {
+        let link = parse_deep_link("openclaw://canvas?session=desk").unwrap();
+        assert!(matches!(
+            link,
+            DeepLink::Canvas {
+                session: Some(s),
+            } if s == "desk"
+        ));
+    }
+
+    #[test]
+    fn parses_agent_session() {
+        let link = parse_deep_link("openclaw://agent?message=hi&session=main").unwrap();
+        assert!(matches!(
+            link,
+            DeepLink::Agent {
+                message,
+                session: Some(s),
+                ..
+            } if message == "hi" && s == "main"
+        ));
+    }
+
+    #[test]
+    fn parses_gateway_host_port() {
+        let link = parse_deep_link("openclaw://gateway?host=192.168.1.5&port=18789").unwrap();
+        assert!(matches!(
+            link,
+            DeepLink::Gateway {
+                host: Some(h),
+                port: Some(18789),
+            } if h == "192.168.1.5"
         ));
     }
 }

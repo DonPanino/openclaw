@@ -5,6 +5,23 @@ pub fn should_autostart_gateway(settings: &GatewayConnectionSettings) -> bool {
     settings.mode == ConnectionMode::Local && settings.gateway_autostart
 }
 
+/// Gateway semver from `openclaw gateway status --json` (probe or daemon gather).
+pub fn gateway_version_from_daemon_status_json(json: &str) -> Option<String> {
+    let value = serde_json::from_str::<serde_json::Value>(json).ok()?;
+    gateway_version_from_status_value(&value)
+}
+
+pub fn gateway_version_from_status_value(value: &serde_json::Value) -> Option<String> {
+    value
+        .pointer("/gateway/version")
+        .or_else(|| value.pointer("/rpc/server/version"))
+        .or_else(|| value.pointer("/rpc/version"))
+        .and_then(|v| v.as_str())
+        .map(str::trim)
+        .filter(|s| !s.is_empty())
+        .map(str::to_string)
+}
+
 /// `openclaw gateway status --json` shape (daemon status gather).
 pub fn gateway_status_indicates_running(json: &str) -> bool {
     let Ok(value) = serde_json::from_str::<serde_json::Value>(json) else {
@@ -49,5 +66,19 @@ mod tests {
         assert!(gateway_status_indicates_running(json));
         let rpc_ok = r#"{"service":{"runtime":{"status":"stopped"}},"rpc":{"ok":true}}"#;
         assert!(gateway_status_indicates_running(rpc_ok));
+    }
+
+    #[test]
+    fn parses_gateway_version_from_status_json() {
+        let json = r#"{"gateway":{"version":"2026.6.2"},"rpc":{"ok":true,"server":{"version":"2026.6.2"}}}"#;
+        assert_eq!(
+            gateway_version_from_daemon_status_json(json).as_deref(),
+            Some("2026.6.2")
+        );
+        let rpc_only = r#"{"rpc":{"version":"1.2.3"}}"#;
+        assert_eq!(
+            gateway_version_from_daemon_status_json(rpc_only).as_deref(),
+            Some("1.2.3")
+        );
     }
 }

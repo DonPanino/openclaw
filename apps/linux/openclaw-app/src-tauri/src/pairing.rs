@@ -57,8 +57,8 @@ fn notify_pending(app: &AppHandle, kind: &str, list: &Value) {
             .or_else(|| req.get("nodeId"))
             .and_then(|v| v.as_str())
             .unwrap_or("unknown");
-        let summary = format!("OpenClaw {kind} pairing");
-        let body = format!("{name} wants to connect");
+        let summary = "OpenClaw pairing request";
+        let body = format!("{kind} \"{name}\" — open Settings to approve");
         let _ = notify_rust::Notification::new()
             .summary(&summary)
             .body(&body)

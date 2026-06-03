@@ -1,0 +1,11 @@
+[package]
+name = "openclaw-bridge"
+description = "Linux UI automation bridge (Peekaboo parity stub)"
+version = "2026.6.2"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+serde = { workspace = true, features = ["derive"] }
+dirs = { workspace = true }

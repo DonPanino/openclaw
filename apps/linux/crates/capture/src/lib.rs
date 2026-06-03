@@ -1,8 +1,17 @@
 mod portal;
 
+use base64::{engine::general_purpose::STANDARD, Engine as _};
 use serde_json::{json, Value};
+use std::path::PathBuf;
+use std::time::{SystemTime, UNIX_EPOCH};
 use thiserror::Error;
+use tokio::fs;
 use tokio::process::Command;
+
+/// Gateway/CLI media payloads use standard base64 (no line breaks).
+pub fn bytes_to_base64(bytes: &[u8]) -> String {
+    STANDARD.encode(bytes)
+}
 
 #[derive(Error, Debug)]
 pub enum CaptureError {
@@ -108,11 +117,138 @@ async fn fswebcam_burst_jpeg(frames: u8) -> Result<Vec<u8>, CaptureError> {
     last.ok_or_else(|| CaptureError::Failed("fswebcam burst produced no frames".into()))
 }
 
-/// Screen recording is not implemented yet (wf-recorder / portal + ffmpeg planned).
-pub async fn screen_record() -> Result<Vec<u8>, CaptureError> {
+/// Short screen clip for gateway `screen.record` (`nodes-screen.ts` payload shape).
+pub struct ScreenRecord {
+    pub bytes: Vec<u8>,
+    pub duration_ms: u64,
+    pub has_audio: bool,
+    /// `webm` or `mp4`
+    pub format: &'static str,
+}
+
+const RECORD_SECS: &str = "2";
+const RECORD_DURATION_MS: u64 = 2000;
+
+/// ~2s clip: `wf-recorder` (Wayland), else `ffmpeg` x11grab (X11), else not implemented.
+pub async fn screen_record() -> Result<ScreenRecord, CaptureError> {
+    if has_bin("wf-recorder").await {
+        if let Ok(rec) = wf_recorder_clip().await {
+            return Ok(rec);
+        }
+    }
+    if has_bin("ffmpeg").await {
+        if let Ok(rec) = ffmpeg_x11grab_clip().await {
+            return Ok(rec);
+        }
+    }
     Err(CaptureError::NotImplemented(
-        "screen.record is not implemented on Linux yet; use screen.snapshot. Planned: wf-recorder or ffmpeg + xdg-desktop-portal ScreenCast".into(),
+        "screen.record: install wf-recorder (Wayland) or ffmpeg with x11grab (X11); use screen.snapshot otherwise"
+            .into(),
     ))
+}
+
+fn temp_media_path(ext: &str) -> PathBuf {
+    let ts = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map(|d| d.as_secs())
+        .unwrap_or(0);
+    std::env::temp_dir().join(format!("openclaw-screen-record-{ts}.{ext}"))
+}
+
+async fn run_wf_recorder(path: &PathBuf, with_audio: bool) -> Result<std::process::ExitStatus, CaptureError> {
+    let path_str = path.to_string_lossy();
+    let mut args = vec![
+        "-f",
+        path_str.as_ref(),
+        "-d",
+        RECORD_SECS,
+        "--log-level",
+        "error",
+    ];
+    if with_audio {
+        args.push("--audio");
+    }
+    let output = Command::new("wf-recorder")
+        .args(&args)
+        .output()
+        .await
+        .map_err(|e| CaptureError::Failed(format!("wf-recorder: {e}")))?;
+    Ok(output.status)
+}
+
+async fn wf_recorder_clip() -> Result<ScreenRecord, CaptureError> {
+    let path = temp_media_path("webm");
+    let mut with_audio = true;
+    let mut status = run_wf_recorder(&path, true).await?;
+    if !status.success() {
+        with_audio = false;
+        let _ = fs::remove_file(&path).await;
+        status = run_wf_recorder(&path, false).await?;
+    }
+    if !status.success() {
+        let _ = fs::remove_file(&path).await;
+        return Err(CaptureError::Failed(format!("wf-recorder exit {:?}", status.code())));
+    }
+    let bytes = fs::read(&path).await.map_err(|e| CaptureError::Failed(e.to_string()))?;
+    let _ = fs::remove_file(&path).await;
+    if bytes.is_empty() {
+        return Err(CaptureError::Failed("wf-recorder produced empty file".into()));
+    }
+    Ok(ScreenRecord {
+        bytes,
+        duration_ms: RECORD_DURATION_MS,
+        has_audio: with_audio,
+        format: "webm",
+    })
+}
+
+async fn ffmpeg_x11grab_clip() -> Result<ScreenRecord, CaptureError> {
+    let display = std::env::var("DISPLAY").unwrap_or_else(|_| ":0.0".into());
+    let path = temp_media_path("mp4");
+    let path_str = path.to_string_lossy();
+    let output = Command::new("ffmpeg")
+        .args([
+            "-hide_banner",
+            "-loglevel",
+            "error",
+            "-y",
+            "-f",
+            "x11grab",
+            "-framerate",
+            "25",
+            "-i",
+            &display,
+            "-t",
+            RECORD_SECS,
+            "-c:v",
+            "libx264",
+            "-pix_fmt",
+            "yuv420p",
+            "-movflags",
+            "+faststart",
+            path_str.as_ref(),
+        ])
+        .output()
+        .await
+        .map_err(|e| CaptureError::Failed(format!("ffmpeg: {e}")))?;
+    if !output.status.success() {
+        let _ = fs::remove_file(&path).await;
+        return Err(CaptureError::Failed(format!(
+            "ffmpeg x11grab exit {:?}",
+            output.status.code()
+        )));
+    }
+    let bytes = fs::read(&path).await.map_err(|e| CaptureError::Failed(e.to_string()))?;
+    let _ = fs::remove_file(&path).await;
+    if bytes.is_empty() {
+        return Err(CaptureError::Failed("ffmpeg x11grab produced empty file".into()));
+    }
+    Ok(ScreenRecord {
+        bytes,
+        duration_ms: RECORD_DURATION_MS,
+        has_audio: false,
+        format: "mp4",
+    })
 }
 
 pub async fn camera_snap() -> Result<Vec<u8>, CaptureError> {
@@ -268,7 +404,19 @@ pub async fn capture_diagnostics() -> Value {
         "imagemagick": has_bin("import").await,
         "fswebcam": has_bin("fswebcam").await,
         "ffmpeg": has_bin("ffmpeg").await,
+        "wfRecorder": has_bin("wf-recorder").await,
         "gpspipe": has_bin("gpspipe").await,
         "geoclueBusctl": has_bin("busctl").await,
     })
+}
+
+#[cfg(test)]
+mod base64_tests {
+    use super::*;
+
+    #[test]
+    fn bytes_to_base64_roundtrip() {
+        assert_eq!(bytes_to_base64(b"hi"), "aGk=");
+        assert_eq!(bytes_to_base64(&[]), "");
+    }
 }

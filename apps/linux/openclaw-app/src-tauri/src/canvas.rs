@@ -160,6 +160,56 @@ fn parse_eval_json_result(raw: &str) -> Value {
     serde_json::from_str(raw).unwrap_or(json!({ "raw": raw }))
 }
 
+/// Webview PNG capture: A2UI `snapshot()` when present, else blank canvas at devicePixelRatio.
+const CANVAS_WEBVIEW_SNAPSHOT_JS: &str = r##"(() => {
+  try {
+    const host = globalThis.openclawA2UI;
+    if (host && typeof host.snapshot === "function") {
+      const out = host.snapshot();
+      if (typeof out === "string" && out.startsWith("data:image/")) return out;
+    }
+  } catch (_) {}
+  try {
+    const dpr = window.devicePixelRatio || 1;
+    const w = Math.max(1, Math.floor((document.documentElement.clientWidth || window.innerWidth) * dpr));
+    const h = Math.max(1, Math.floor((document.documentElement.clientHeight || window.innerHeight) * dpr));
+    const canvas = document.createElement("canvas");
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return "";
+    const bg = getComputedStyle(document.documentElement).backgroundColor || "#1a1a1a";
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, w, h);
+    return canvas.toDataURL("image/png");
+  } catch (_) {
+    return "";
+  }
+})()"##;
+
+fn png_base64_from_data_url(raw: &str) -> Option<String> {
+    openclaw_kit::png_base64_from_data_url(raw)
+}
+
+async fn try_webview_png_snapshot(app: &AppHandle, session: &str) -> Result<String, String> {
+    let mut last_err = "webview snapshot returned empty PNG".to_string();
+    for attempt in 0..3 {
+        if attempt > 0 {
+            tokio::time::sleep(Duration::from_millis(350)).await;
+        }
+        match eval_with_result(app, session, CANVAS_WEBVIEW_SNAPSHOT_JS) {
+            Ok(raw) => {
+                if let Some(base64) = png_base64_from_data_url(&raw) {
+                    return Ok(base64);
+                }
+                last_err = "webview snapshot returned empty or invalid PNG data URL".into();
+            }
+            Err(err) => last_err = err,
+        }
+    }
+    Err(last_err)
+}
+
 pub fn open_canvas_window(app: &AppHandle, session_id: &str) -> Result<(), String> {
     let session_id = session_id.to_string();
     run_on_main(app, move |app| open_canvas_window_inner(app, &session_id))
@@ -181,13 +231,17 @@ fn open_canvas_window_inner(app: &AppHandle, session_id: &str) -> Result<(), Str
         WebviewUrl::App(format!("canvas.html?session={session_id}").into())
     };
 
-    let win = WebviewWindowBuilder::new(app, &label, url)
-        .title("OpenClaw Canvas")
-        .inner_size(960.0, 720.0)
-        .visible(true)
-        .focused(true)
-        .center()
-        .build()
+    let win = crate::apply_app_icon(
+        app,
+        WebviewWindowBuilder::new(app, &label, url)
+            .title("OpenClaw Canvas")
+            .inner_size(960.0, 720.0)
+            .visible(true)
+            .focused(true)
+            .center(),
+    )
+    .map_err(|e| e.to_string())?
+    .build()
         .map_err(|e| e.to_string())?;
     win.set_focus().map_err(|e| e.to_string())?;
     Ok(())
@@ -237,16 +291,29 @@ pub async fn handle_canvas_command(
         }
         "canvas.snapshot" => {
             open_canvas_window(app, &session)?;
-            // Webview capture is not wired yet; screen snapshot supports agent vision on Linux.
-            let bytes = capture::screen_snapshot()
-                .await
-                .map_err(|e| e.to_string())?;
-            Ok(json!({
-                "ok": true,
-                "format": "png",
-                "bytes": bytes,
-                "note": "screen fallback until webview snapshot is implemented"
-            }))
+            tokio::time::sleep(Duration::from_millis(250)).await;
+            match try_webview_png_snapshot(app, &session).await {
+                Ok(base64) => {
+                    return Ok(json!({
+                        "ok": true,
+                        "format": "png",
+                        "base64": base64,
+                        "source": "webview",
+                    }));
+                }
+                Err(webview_err) => {
+                    let bytes = capture::screen_snapshot()
+                        .await
+                        .map_err(|e| format!("screen fallback failed: {e} (webview: {webview_err})"))?;
+                    return Ok(json!({
+                        "ok": true,
+                        "format": "png",
+                        "base64": capture::bytes_to_base64(&bytes),
+                        "source": "screen",
+                        "note": format!("screen fallback ({webview_err})"),
+                    }));
+                }
+            }
         }
         "canvas.a2ui.reset" => {
             open_canvas_window(app, &session)?;
@@ -351,20 +418,33 @@ pub async fn handle_node_command(
             Ok(json!({ "ok": true }))
         }
         "talk.ptt.stop" => {
-            let transcript = if let Some(voice) = app.try_state::<crate::voice::VoiceService>() {
-                voice.stop_ptt()?
-            } else {
-                None
-            };
-            Ok(json!({ "ok": true, "transcript": transcript.unwrap_or_default() }))
+            let mut payload = json!({ "ok": true, "transcript": "" });
+            if let Some(voice) = app.try_state::<crate::voice::VoiceService>() {
+                let result = voice.stop_ptt()?;
+                payload["transcript"] = json!(result.transcript);
+                if let Some(audio) = result.audio_base64 {
+                    payload["audioBase64"] = json!(audio);
+                }
+            }
+            Ok(payload)
         }
         "talk.ptt.cancel" => {
             if let Some(voice) = app.try_state::<crate::voice::VoiceService>() {
-                let _ = voice.stop_ptt()?;
+                voice.cancel_ptt()?;
             }
             Ok(json!({ "ok": true, "cancelled": true }))
         }
-        "talk.ptt.once" => Ok(json!({ "ok": true, "stub": true })),
+        "talk.ptt.once" => {
+            let mut payload = json!({ "ok": true, "transcript": "" });
+            if let Some(voice) = app.try_state::<crate::voice::VoiceService>() {
+                let result = voice.ptt_once()?;
+                payload["transcript"] = json!(result.transcript);
+                if let Some(audio) = result.audio_base64 {
+                    payload["audioBase64"] = json!(audio);
+                }
+            }
+            Ok(payload)
+        }
         other => Err(format!("unsupported command: {other}")),
     }
 }
@@ -377,5 +457,15 @@ mod tests {
     fn decodes_jsonl_messages() {
         let msgs = decode_jsonl_messages("{\"a\":1}\n\n{\"b\":2}\n").unwrap();
         assert_eq!(msgs.len(), 2);
+    }
+
+    #[test]
+    fn parses_png_data_url_base64() {
+        let raw = "data:image/png;base64,iVBORw0KGgo=";
+        assert_eq!(
+            png_base64_from_data_url(raw).as_deref(),
+            Some("iVBORw0KGgo=")
+        );
+        assert!(png_base64_from_data_url("data:text/plain,foo").is_none());
     }
 }
